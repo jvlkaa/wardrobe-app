@@ -1,25 +1,20 @@
-package pl.app.wardrobe.user.entity;
+package pl.app.wardrobe.user.dto;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import pl.app.wardrobe.clothes.entity.Item;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 
+/* user creation, user input */
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @ToString
 @EqualsAndHashCode
-public class User {
-    private UUID id;
+public class PutUserRequest {
     private String login;
     private String password;
     private LocalDate dateOfBirth;
     private String email;
-    private Role role;
 }

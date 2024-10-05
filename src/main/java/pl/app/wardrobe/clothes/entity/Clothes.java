@@ -16,5 +16,4 @@ public class Clothes {
     private UUID id;
     private String name;
     private List<Material> material;
-
 }

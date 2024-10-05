@@ -2,6 +2,7 @@ package pl.app.wardrobe.clothes.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.app.wardrobe.user.entity.User;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class Item {
     private String color;
     private LocalDate purchaseDate;
     private Clothes clothesCategory;
+    private User owner;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
