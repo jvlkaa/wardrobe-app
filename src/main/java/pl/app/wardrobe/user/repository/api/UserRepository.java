@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface UserRepository extends Repository <User, UUID>{
     Optional<User> findUserByLogin(String login);
     Optional<User> findUserByEmail(String email);
+    Optional<User> findUserById(UUID id);
 }
