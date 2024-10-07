@@ -3,7 +3,7 @@ package pl.app.wardrobe.clothes.controller.impl;
 import pl.app.wardrobe.clothes.controller.api.ClothesController;
 import pl.app.wardrobe.clothes.dto.GetClothesListResponse;
 import pl.app.wardrobe.clothes.service.ClothesService;
-import pl.app.wardrobe.dtoFactory.DtoFunctionFactory;
+import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
 
 public class ClothesControllerImpl implements ClothesController {
 

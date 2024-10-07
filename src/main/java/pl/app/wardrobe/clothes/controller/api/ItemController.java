@@ -8,7 +8,7 @@ import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import java.io.InputStream;
 import java.util.UUID;
 
-public interface  ItemController {
+public interface ItemController {
     void putItem(UUID id, PutItemRequest request);
 
     GetItemListResponse getItemList();
@@ -19,11 +19,11 @@ public interface  ItemController {
 
     GetItemResponse getItem(UUID id);
 
-    byte[] getItemPhoto(UUID id);
+//    byte[] getItemPhoto(UUID id);
 
     void patchItem(UUID id, PatchItemRequest request);
 
-    void patchItemPhoto(UUID id, InputStream photo);
+//    void patchItemPhoto(UUID id, InputStream photo);
 
     void deleteItem(UUID id);
 }

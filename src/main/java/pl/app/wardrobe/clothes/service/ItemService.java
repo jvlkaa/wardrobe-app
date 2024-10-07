@@ -57,17 +57,6 @@ public class ItemService {
         itemRepository.update(item);
     }
 
-    public void updatePhoto(UUID id, InputStream iStream){
-        itemRepository.find(id).ifPresent(item ->{
-            try {
-                item.setPhoto(iStream.readAllBytes());
-                itemRepository.update(item);
-            }
-            catch (IOException e){
-                throw new IllegalStateException(e);
-            }
-        });
-    }
 
     public void delete(UUID id){
         itemRepository.delete(itemRepository.find(id).orElseThrow());

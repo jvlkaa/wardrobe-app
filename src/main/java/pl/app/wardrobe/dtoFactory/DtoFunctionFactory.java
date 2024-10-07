@@ -1,7 +1,8 @@
-package pl.app.wardrobe.dtoFactory;
+package pl.app.wardrobe.dtofactory;
 
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.function.*;
+import pl.app.wardrobe.user.dto.function.*;
 
 public class DtoFunctionFactory {
 
@@ -31,5 +32,22 @@ public class DtoFunctionFactory {
     }
 
     /* user */
+    public UserToResponseFunction userToResponse(){
+        return new UserToResponseFunction();
+    }
+    public UsersToResponseFunction usersToResponse(){
+        return new UsersToResponseFunction();
+    }
 
+    public RequestToUserFunction requestToUser(){
+        return new RequestToUserFunction();
+    }
+
+    public UpdateUserPasswordWithRequestFunction updateUserPasswordWithRequest(){
+        return new UpdateUserPasswordWithRequestFunction();
+    }
+
+    public UpdateUserWithRequestFunction updateUserWithRequest(){
+        return new UpdateUserWithRequestFunction();
+    }
 }

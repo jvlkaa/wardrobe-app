@@ -1,6 +1,5 @@
 package pl.app.wardrobe.clothes.controller.impl;
 
-import jakarta.ws.rs.NotFoundException;
 import pl.app.wardrobe.clothes.controller.api.ItemController;
 import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
@@ -8,7 +7,8 @@ import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ItemService;
-import pl.app.wardrobe.dtoFactory.DtoFunctionFactory;
+import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
+import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
 
 import java.io.InputStream;
 import java.util.UUID;
@@ -58,12 +58,12 @@ public class ItemControllerImpl implements ItemController {
                 .orElseThrow(NotFoundException::new);
     }
 
-    @Override
-    public byte[] getItemPhoto(UUID id) {
-        return itemService.findItemById(id)
-                .map(Item::getPhoto)
-                .orElseThrow(NotFoundException::new);
-    }
+//    @Override
+//    public byte[] getItemPhoto(UUID id) {
+//        return itemService.findItemById(id)
+//                .map(Item::getAvatar)
+//                .orElseThrow(NotFoundException::new);
+//    }
 
     @Override
     public void patchItem(UUID id, PatchItemRequest request) {
@@ -75,15 +75,15 @@ public class ItemControllerImpl implements ItemController {
         );
     }
 
-    @Override
-    public void patchItemPhoto(UUID id, InputStream photo) {
-        itemService.findItemById(id).ifPresentOrElse(
-                entity -> itemService.updatePhoto(id, photo),
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
-    }
+//    @Override
+//    public void patchItemPhoto(UUID id, InputStream photo) {
+//        itemService.findItemById(id).ifPresentOrElse(
+//                entity -> itemService.updatePhoto(id, photo),
+//                () -> {
+//                    throw new NotFoundException();
+//                }
+//        );
+//    }
 
     @Override
     public void deleteItem(UUID id) {

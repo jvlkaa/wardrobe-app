@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="Wardrobe app Server">
     <featureManager>
-        <feature>servlet-4.0</feature>
-        <feature>jsonb-1.0</feature>
+        <feature>servlet-6.0</feature>
+        <feature>jsonb-3.0</feature>
     </featureManager>
 </server>

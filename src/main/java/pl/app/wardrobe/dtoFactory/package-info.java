@@ -1,1 +1,1 @@
-package pl.app.wardrobe.dtoFactory;
+package pl.app.wardrobe.dtofactory;

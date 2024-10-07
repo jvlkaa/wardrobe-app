@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.app.wardrobe.user.entity.User;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 @SuperBuilder
 @ToString
 @EqualsAndHashCode
-public class Item {
+public class Item implements Serializable {
     private UUID id;
     private String name;
     private Size size;
@@ -22,8 +23,4 @@ public class Item {
     private LocalDate purchaseDate;
     private Clothes clothesCategory;
     private User owner;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private byte[] photo;
 }

@@ -15,6 +15,7 @@ public class UpdateUserPasswordWithRequestFunction implements BiFunction<User, P
                 .password(request.getPassword())
                 .dateOfBirth(entity.getDateOfBirth())
                 .email(entity.getEmail())
+                .avatar(entity.getAvatar())
                 .build();
     }
 

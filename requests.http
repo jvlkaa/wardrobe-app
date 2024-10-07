@@ -1,0 +1,87 @@
+# -----------------USER----------------- #
+
+# get single user
+GET http://localhost:9080/wardrobe-app/main/userList/3ed970bd-e79b-448c-936a-821a58eef383
+###
+
+# get user list
+GET http://localhost:9080/wardrobe-app/main/userList
+###
+
+# delete user
+DELETE http://localhost:9080/wardrobe-app/main/userList/d6a72d4b-0f98-47e5-8e3b-2f37904a6f7b
+###
+# delete non existing user
+DELETE http://localhost:9080/wardrobe-app/main/userList/c7a72d4b-0f98-47e5-8e3b-2f37904a6222
+###
+
+# put user; again to try put user with the same id
+PUT http://localhost:9080/wardrobe-app/main/userList/e7fc646e-c213-440a-b62d-3724db73869b
+Content-Type: application/json
+
+{
+  "login": "julia",
+  "email": "julia@example.com",
+  "dateOfBirth": "2002-07-16",
+  "password": "password123"
+}
+
+
+###
+# update user
+PATCH  http://localhost:9080/wardrobe-app/main/userList/3ed970bd-e79b-448c-936a-821a58eef383
+Content-Type: application/json
+
+{
+  "dateOfBirth": "2002-07-15",
+  "email": "julia2002@example.com"
+}
+###
+
+#update non existing user
+PATCH  http://localhost:9080/wardrobe-app/main/userList/c7a72d4b-0f98-47e5-8e3b-2f37904a6222
+Content-Type: application/json
+
+{
+  "dateOfBirth": "2002-07-15",
+  "email": "julia2002@example.com"
+}
+###
+
+
+
+#----------------USER AVATAR------------------ #
+# get existing avatar
+GET http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383/avatar
+###
+# get noon existing avatar
+GET http://localhost:9080/wardrobe-app/main/users/8707cd01-ad10-4c87-ba0d-09b789f51ef8/avatar
+###
+# replace existing avatar
+PUT http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383/avatar
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="user1.png"
+
+< src/main/resources/pl/app/wardrobe/configuration/user1.png
+--boundary
+
+###
+
+# delete avatar
+DELETE http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383/avatar
+###
+
+###
+# put avatar
+PUT http://localhost:9080/wardrobe-app/main/users/8707cd01-ad10-4c87-ba0d-09b789f51ef8/avatar
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="user3.png"
+
+< src/main/resources/pl/app/wardrobe/configuration/user3.png
+--boundary
+
+###
