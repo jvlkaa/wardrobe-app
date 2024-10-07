@@ -101,7 +101,7 @@ public class UserService {
     public void deleteAvatar(UUID id){
         userRepository.find(id).ifPresent(user ->{
             String path = this.avatarPath + "\\" + user.getAvatar();
-            if (path != null) {
+            if (user.getAvatar() != null) {
                 try {
                     Path filePath = Paths.get(path);
                     Files.deleteIfExists(filePath);
@@ -110,6 +110,9 @@ public class UserService {
                 }
                 user.setAvatar(null);
                 userRepository.update(user);
+            }
+            else{
+                throw new NotFoundException();
             }
         });
     }

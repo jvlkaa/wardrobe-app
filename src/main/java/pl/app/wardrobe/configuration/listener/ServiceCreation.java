@@ -21,7 +21,7 @@ public class ServiceCreation implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        /* avatars path from deskryptor */
+        /* avatars path from descryptor */
         String avatarsPath =   event.getServletContext().getInitParameter("avatarsPath");
         DataSource dataSource = (DataSource) event.getServletContext().getAttribute("datasource");
 

@@ -213,17 +213,4 @@ public class InitializedData implements ServletContextListener {
 //        itemService.create(item8);
 
     }
-
-    @SneakyThrows
-    private byte[] getResourceAsByteArray(String name) {
-        try (InputStream is = this.getClass().getResourceAsStream(name)) {
-            if (is != null) {
-                return is.readAllBytes();
-            } else {
-                throw new IllegalStateException("Error, unable to get resource");
-            }
-        }
-    }
-
-
 }
