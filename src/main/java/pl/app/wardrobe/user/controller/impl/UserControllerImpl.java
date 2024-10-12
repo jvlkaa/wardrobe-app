@@ -1,5 +1,6 @@
 package pl.app.wardrobe.user.controller.impl;
 
+import pl.app.wardrobe.controller.servlet.exception.BadRequestException;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
@@ -72,6 +73,22 @@ public class UserControllerImpl implements UserController {
 
     /* avatars */
     @Override
+    public void putUserAvatar(UUID id, InputStream photo) {
+        userService.findUserById(id).ifPresentOrElse(
+                entity -> {
+                    try{
+                        userService.putAvatar(id, photo);
+                    } catch (NullPointerException ex) {
+                        throw new BadRequestException();
+                    }
+                },
+                () -> {
+                    throw new NotFoundException();
+                }
+        );
+    }
+
+    @Override
     public byte[] getUserAvatar(UUID id) {
         return userService.findUserById(id)
                 .map(user -> userService.getAvatar(id))
@@ -81,7 +98,13 @@ public class UserControllerImpl implements UserController {
     @Override
     public void patchUserAvatar(UUID id, InputStream photo) {
         userService.findUserById(id).ifPresentOrElse(
-                entity -> userService.updateAvatar(id, photo),
+                entity -> {
+                    try {
+                        userService.updateAvatar(id, photo);
+                    } catch (IllegalStateException ex) {
+                        throw new NotFoundException();
+                    }
+                } ,
                 () -> {
                     throw new NotFoundException();
                 }

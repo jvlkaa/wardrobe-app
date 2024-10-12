@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends Repository <User, UUID>{
-    Optional<User> findUserByLogin(String login);
-    Optional<User> findUserByEmail(String email);
-    List<User> findUserList();
+    Optional<User> findByLogin(String login);
+    Optional<User> findByEmail(String email);
 }

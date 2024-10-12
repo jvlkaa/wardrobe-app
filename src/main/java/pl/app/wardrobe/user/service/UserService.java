@@ -33,15 +33,15 @@ public class UserService {
     }
 
     public List<User> findUserList(){
-        return userRepository.findUserList();
+        return userRepository.findAll();
     }
 
     public Optional<User> findUserByLogin(String login) {
-        return userRepository.findUserByLogin(login);
+        return userRepository.findByLogin(login);
     }
     public Optional<User> findUserByEmail(String email) {
 
-        return userRepository.findUserByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     public Optional<User> findUserById(UUID id) {
@@ -68,7 +68,7 @@ public class UserService {
             try {
                 String avatar = user.getAvatar();
                 if (avatar != null) {
-                    String path = this.avatarPath + "\\" + avatar;
+                    String path = this.avatarPath + File.separator + avatar;
                     return Files.readAllBytes(Paths.get(path));
                 } else {
                     throw new NotFoundException("Avatar is not set");
@@ -82,9 +82,9 @@ public class UserService {
     public void updateAvatar(UUID id, InputStream iStream){
         userRepository.find(id).ifPresent(user ->{
             try {
-                String path = this.avatarPath + "\\" + id.toString() + ".png";
+                String path = this.avatarPath + File.separator + id.toString() + ".png";
                 if(user.getAvatar() == null){
-                    Files.copy(iStream, Paths.get(path));
+                    throw new IllegalStateException();
                 }
                 else{
                     Files.copy(iStream, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
@@ -98,9 +98,28 @@ public class UserService {
         });
     }
 
+    public void putAvatar(UUID id, InputStream iStream){
+        userRepository.find(id).ifPresent(user ->{
+            try {
+                String path = this.avatarPath + File.separator + id.toString() + ".png";
+                if(user.getAvatar() == null){
+                    Files.copy(iStream, Paths.get(path));
+                }
+                else{
+                    throw new NullPointerException();
+                }
+                user.setAvatar(id.toString() + ".png");
+                userRepository.update(user);
+            }
+            catch (IOException e){
+                throw new IllegalStateException(e);
+            }
+        });
+    }
+
     public void deleteAvatar(UUID id){
         userRepository.find(id).ifPresent(user ->{
-            String path = this.avatarPath + "\\" + user.getAvatar();
+            String path = this.avatarPath + File.separator + user.getAvatar();
             if (user.getAvatar() != null) {
                 try {
                     Path filePath = Paths.get(path);

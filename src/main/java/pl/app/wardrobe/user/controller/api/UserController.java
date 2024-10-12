@@ -23,10 +23,12 @@ public interface UserController {
 
 
     /* avatars */
+    void putUserAvatar(UUID id, InputStream photo);
 
     byte[] getUserAvatar(UUID id);
 
     void patchUserAvatar(UUID id, InputStream photo);
+
 
     void deleteUserAvatar(UUID id);
 }

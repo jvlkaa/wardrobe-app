@@ -141,7 +141,7 @@ public class MainServlet extends HttpServlet {
             }
             else if (path.matches(Patterns.USER_AVATAR.pattern())) {
                 UUID uuid = getIdFromPath(Patterns.USER_AVATAR, path);
-                userController.patchUserAvatar(uuid, request.getPart("avatar").getInputStream());
+                userController.putUserAvatar(uuid, request.getPart("avatar").getInputStream());
                 return;
             }
         }
@@ -242,7 +242,6 @@ public class MainServlet extends HttpServlet {
                 return;
             }
         }
-
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 }

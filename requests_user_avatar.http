@@ -4,6 +4,11 @@
 GET http://localhost:9080/wardrobe-app/main/userList/3ed970bd-e79b-448c-936a-821a58eef383
 ###
 
+# get non existing user
+GET http://localhost:9080/wardrobe-app/main/userList/222970bd-e79b-448c-936a-821a58eef383
+###
+
+
 # get user list
 GET http://localhost:9080/wardrobe-app/main/userList
 ###
@@ -54,18 +59,33 @@ Content-Type: application/json
 # get existing avatar
 GET http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383/avatar
 ###
-# get noon existing avatar
+# get no existing avatar
 GET http://localhost:9080/wardrobe-app/main/users/8707cd01-ad10-4c87-ba0d-09b789f51ef8/avatar
 ###
+# get avatar from no existing user
+GET http://localhost:9080/wardrobe-app/main/users/2222cd01-ad10-4c87-ba0d-09b789f51ef8/avatar
+###
+
 # replace existing avatar
-PUT http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383/avatar
+PATCH http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383/avatar
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
 Content-Disposition: form-data; name="avatar"; filename="user1.png"
 
 < src/main/resources/pl/app/wardrobe/configuration/user1.png
+--boundary--
+
+###
+# replace non existing avatar
+PATCH http://localhost:9080/wardrobe-app/main/users/8707cd01-ad10-4c87-ba0d-09b789f51ef8/avatar
+Content-Type: multipart/form-data; boundary=boundary
+
 --boundary
+Content-Disposition: form-data; name="avatar"; filename="user1.png"
+
+< src/main/resources/pl/app/wardrobe/configuration/user1.png
+--boundary--
 
 ###
 
@@ -82,6 +102,6 @@ Content-Type: multipart/form-data; boundary=boundary
 Content-Disposition: form-data; name="avatar"; filename="user3.png"
 
 < src/main/resources/pl/app/wardrobe/configuration/user3.png
---boundary
+--boundary--
 
 ###

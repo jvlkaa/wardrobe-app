@@ -36,24 +36,18 @@ public class UserInMemoryRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByLogin(String login) {
+    public Optional<User> findByLogin(String login) {
         return dataSource.findUserList().stream()
                 .filter(user -> user.getLogin().equals(login))
                 .findFirst();
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return dataSource.findUserList().stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();
     }
-
-    @Override
-    public List<User> findUserList() {
-        return dataSource.findUserList();
-    }
-
 
     @Override
     public void update(User entity) {
