@@ -1,5 +1,7 @@
 package pl.app.wardrobe.clothes.repository.memory;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
 import pl.app.wardrobe.datasource.DataSource;
@@ -8,9 +10,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestScoped
 public class ClothesInMemoryRepository implements ClothesRepository {
     private final DataSource dataSource;
 
+    @Inject
     public ClothesInMemoryRepository(DataSource source){
         this.dataSource = source;
     }
@@ -19,18 +23,6 @@ public class ClothesInMemoryRepository implements ClothesRepository {
     @Override
     public void create(Clothes entity) {
         dataSource.createClothes(entity);
-    }
-
-    @Override
-    public List<Clothes> findClothesList() {
-        return dataSource.findClothesList();
-    }
-
-    @Override
-    public Optional<Clothes> findClothes(UUID id) {
-        return dataSource.findClothesList().stream()
-                .filter(clothes -> clothes.getId().equals(id))
-                .findFirst();
     }
 
     @Override
@@ -47,11 +39,12 @@ public class ClothesInMemoryRepository implements ClothesRepository {
 
     @Override
     public void update(Clothes entity) {
-        throw new UnsupportedOperationException("not implemented");
+        dataSource.updateClothes(entity);
     }
 
     @Override
     public void delete(Clothes entity) {
-        throw new UnsupportedOperationException("not implemented");
+
+        dataSource.deleteClothes(entity.getId());
     }
 }

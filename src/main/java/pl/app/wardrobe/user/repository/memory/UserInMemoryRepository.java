@@ -1,5 +1,7 @@
 package pl.app.wardrobe.user.repository.memory;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.datasource.DataSource;
 import pl.app.wardrobe.user.entity.User;
@@ -9,10 +11,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestScoped
 public class UserInMemoryRepository implements UserRepository {
 
     private final DataSource dataSource;
 
+    @Inject
     public UserInMemoryRepository(DataSource source) {
         this.dataSource = source;
     }

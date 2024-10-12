@@ -1,9 +1,11 @@
 package pl.app.wardrobe.serialization;
 
+import jakarta.enterprise.context.Dependent;
 import lombok.SneakyThrows;
 import java.io.*;
 
-public class CloningSerialization {
+@Dependent
+public class CloningComponent {
 
     @SneakyThrows
     @SuppressWarnings("unchecked")

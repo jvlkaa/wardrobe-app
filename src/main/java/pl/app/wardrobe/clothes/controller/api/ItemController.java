@@ -12,18 +12,11 @@ public interface ItemController {
     void putItem(UUID id, PutItemRequest request);
 
     GetItemListResponse getItemList();
-
-    GetItemListResponse getClothesItemList(UUID id);
-
-    GetItemListResponse getUserItemList(UUID id);
-
     GetItemResponse getItem(UUID id);
-
-//    byte[] getItemPhoto(UUID id);
+    GetItemListResponse getItemListFromClothes(UUID id);
+    GetItemListResponse getItemListFromUser(UUID id);
 
     void patchItem(UUID id, PatchItemRequest request);
-
-//    void patchItemPhoto(UUID id, InputStream photo);
 
     void deleteItem(UUID id);
 }

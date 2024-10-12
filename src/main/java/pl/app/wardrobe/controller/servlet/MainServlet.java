@@ -1,5 +1,6 @@
 package pl.app.wardrobe.controller.servlet;
 
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -11,7 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
 import pl.app.wardrobe.clothes.controller.api.ClothesController;
 import pl.app.wardrobe.clothes.controller.api.ItemController;
+import pl.app.wardrobe.clothes.dto.PatchClothesRequest;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
+import pl.app.wardrobe.clothes.dto.PutClothesRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import pl.app.wardrobe.user.controller.api.UserController;
 import pl.app.wardrobe.user.dto.PatchUserRequest;
@@ -45,7 +48,7 @@ public class MainServlet extends HttpServlet {
         private static final Pattern UUID = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
 
         /* item list */
-        public static final Pattern ITEMS   = Pattern.compile("/items/?");
+        public static final Pattern ITEM_LIST   = Pattern.compile("/itemList/?");
 
         /* item */
         public static final Pattern ITEM = Pattern.compile("/item/(%s)".formatted(UUID.pattern()));
@@ -53,6 +56,8 @@ public class MainServlet extends HttpServlet {
 
         /* CLOTHES */
 
+        /* clothes */
+        public static final Pattern CLOTHES = Pattern.compile("/clothes/(%s)".formatted(UUID.pattern()));
         /* clothes list */
         public static final Pattern CLOTHES_LIST = Pattern.compile("/clothesList/?");
 
@@ -60,7 +65,7 @@ public class MainServlet extends HttpServlet {
         public static final Pattern CLOTHES_ITEM_LIST = Pattern.compile("/clothesList/(%s)/items/?".formatted(UUID.pattern()));
 
         /* item list from user*/
-        public static final Pattern USER_ITEM_LIST = Pattern.compile("/users/(%s)/items/?".formatted(UUID.pattern()));
+        public static final Pattern USER_ITEM_LIST = Pattern.compile("/userList/(%s)/items/?".formatted(UUID.pattern()));
 
         /* USER */
 
@@ -73,6 +78,14 @@ public class MainServlet extends HttpServlet {
         /* avatar  of the user */
         public static final Pattern USER_AVATAR = Pattern.compile("/users/(%s)/avatar".formatted(UUID.pattern()));
     }
+
+    @Inject
+    public MainServlet(ItemController itemController, ClothesController clothesController, UserController userController) {
+        this.itemController = itemController;
+        this.clothesController = clothesController;
+        this.userController = userController;
+    }
+
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -123,6 +136,7 @@ public class MainServlet extends HttpServlet {
 
 
     /* doPut, doGet, doPatch, doDelete */
+
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = getPath(request);
         String servletPath = request.getServletPath();
@@ -130,13 +144,19 @@ public class MainServlet extends HttpServlet {
             if (path.matches(Patterns.ITEM.pattern())) {
                 UUID uuid = getIdFromPath(Patterns.ITEM, path);
                 itemController.putItem(uuid, jsonb.fromJson(request.getReader(), PutItemRequest.class));
-                response.addHeader("Location", createUrl(request, Paths.MAIN, "items", uuid.toString()));
+                response.addHeader("Location", createUrl(request, Paths.MAIN, "item", uuid.toString()));
+                return;
+            }
+            else if (path.matches(Patterns.CLOTHES.pattern())) {
+                UUID uuid = getIdFromPath(Patterns.CLOTHES, path);
+                clothesController.putClothes(uuid, jsonb.fromJson(request.getReader(), PutClothesRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.MAIN, "clothes", uuid.toString()));
                 return;
             }
             else if (path.matches(Patterns.USER.pattern())) {
                 UUID uuid = getIdFromPath(Patterns.USER, path);
                 userController.putUser(uuid, jsonb.fromJson(request.getReader(), PutUserRequest.class));
-                response.addHeader("Location", createUrl(request, Paths.MAIN, "userList", uuid.toString()));
+                response.addHeader("Location", createUrl(request, Paths.MAIN, "user", uuid.toString()));
                 return;
             }
             else if (path.matches(Patterns.USER_AVATAR.pattern())) {
@@ -148,12 +168,13 @@ public class MainServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = getPath(request);
         String servletPath = request.getServletPath();
         if (Paths.MAIN.equals(servletPath)) {
-            if (path.matches(Patterns.ITEMS.pattern())) {
+            if (path.matches(Patterns.ITEM_LIST.pattern())) {
                 response.setContentType("application/json");
                 response.getWriter().write(jsonb.toJson(itemController.getItemList()));
                 return;
@@ -166,15 +187,20 @@ public class MainServlet extends HttpServlet {
                 response.setContentType("application/json");
                 response.getWriter().write(jsonb.toJson(clothesController.getClothesList()));
                 return;
+            } else if (path.matches(Patterns.CLOTHES.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = getIdFromPath(Patterns.CLOTHES, path);
+                response.getWriter().write(jsonb.toJson(clothesController.getClothes(uuid)));
+                return;
             } else if (path.matches(Patterns.CLOTHES_ITEM_LIST.pattern())) {
                 response.setContentType("application/json");
                 UUID uuid = getIdFromPath(Patterns.CLOTHES_ITEM_LIST, path);
-                response.getWriter().write(jsonb.toJson(itemController.getClothesItemList(uuid)));
+                response.getWriter().write(jsonb.toJson(itemController.getItemListFromClothes(uuid)));
                 return;
             } else if (path.matches(Patterns.USER_ITEM_LIST.pattern())) {
                 response.setContentType("application/json");
                 UUID uuid = getIdFromPath(Patterns.USER_ITEM_LIST, path);
-                response.getWriter().write(jsonb.toJson(itemController.getUserItemList(uuid)));
+                response.getWriter().write(jsonb.toJson(itemController.getItemListFromUser(uuid)));
                 return;
             }
             else if (path.matches(Patterns.USER_LIST.pattern())) {
@@ -198,6 +224,7 @@ public class MainServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
+    @SuppressWarnings("RedundantThrows")
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = getPath(request);
         String servletPath = request.getServletPath();
@@ -205,6 +232,11 @@ public class MainServlet extends HttpServlet {
             if (path.matches(Patterns.ITEM.pattern())) {
                 UUID uuid = getIdFromPath(Patterns.ITEM, path);
                 itemController.patchItem(uuid, jsonb.fromJson(request.getReader(), PatchItemRequest.class));
+                return;
+            }
+            if (path.matches(Patterns.CLOTHES.pattern())) {
+                UUID uuid = getIdFromPath(Patterns.CLOTHES, path);
+                clothesController.patchClothes(uuid, jsonb.fromJson(request.getReader(), PatchClothesRequest.class));
                 return;
             }
             else if (path.matches(Patterns.USER.pattern())) {
@@ -221,6 +253,7 @@ public class MainServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = getPath(request);
@@ -229,6 +262,11 @@ public class MainServlet extends HttpServlet {
             if (path.matches(Patterns.ITEM.pattern())) {
                 UUID uuid = getIdFromPath(Patterns.ITEM, path);
                 itemController.deleteItem(uuid);
+                return;
+            }
+            if (path.matches(Patterns.CLOTHES.pattern())) {
+                UUID uuid = getIdFromPath(Patterns.CLOTHES, path);
+                clothesController.deleteClothes(uuid);
                 return;
             }
             else if (path.matches(Patterns.USER.pattern())) {

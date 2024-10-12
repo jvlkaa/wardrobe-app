@@ -1,9 +1,12 @@
 package pl.app.wardrobe.dtofactory;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import pl.app.wardrobe.clothes.dto.PatchClothesRequest;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.function.*;
 import pl.app.wardrobe.user.dto.function.*;
 
+@ApplicationScoped
 public class DtoFunctionFactory {
 
     /* item */
@@ -16,9 +19,6 @@ public class DtoFunctionFactory {
     public RequestToItemFunction requestToItem(){
         return new RequestToItemFunction();
     }
-    public PatchItemRequest patchItemRequest(){
-        return new PatchItemRequest();
-    }
     public UpdateItemWithRequestFunction updateItemWithRequest(){
         return new UpdateItemWithRequestFunction();
     }
@@ -30,6 +30,8 @@ public class DtoFunctionFactory {
     public ClothesListToResponseFunction clothesListToResponse(){
         return new ClothesListToResponseFunction();
     }
+    public RequestToClothesFunction requestToClothes() {return new RequestToClothesFunction();}
+    public UpdateClothesWithRequestFunction updateClothesWithRequest(){ return new UpdateClothesWithRequestFunction();}
 
     /* user */
     public UserToResponseFunction userToResponse(){

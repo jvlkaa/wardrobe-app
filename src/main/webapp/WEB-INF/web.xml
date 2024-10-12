@@ -4,18 +4,6 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0"
          metadata-complete="false">
-    <listener>
-        <listener-class>pl.app.wardrobe.configuration.listener.DataSourceCreation</listener-class>
-    </listener>
-    <listener>
-        <listener-class>pl.app.wardrobe.configuration.listener.ServiceCreation</listener-class>
-    </listener>
-    <listener>
-        <listener-class>pl.app.wardrobe.configuration.listener.ControllersCreation</listener-class>
-    </listener>
-    <listener>
-        <listener-class>pl.app.wardrobe.configuration.listener.InitializedData</listener-class>
-    </listener>
     <context-param>
         <param-name>avatarsPath</param-name>
         <param-value>../../../../../../src/avatars</param-value>

@@ -1,5 +1,8 @@
 package pl.app.wardrobe.clothes.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
@@ -12,11 +15,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
+@NoArgsConstructor(force = true)
+
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ClothesRepository clothesRepository;
     private final UserRepository userRepository;
 
+    @Inject
     public ItemService(ItemRepository itemRepository, ClothesRepository clothesRepository,
                        UserRepository userRepository){
         this.itemRepository = itemRepository;
@@ -30,19 +37,19 @@ public class ItemService {
     }
 
     public List<Item> findItems(){
-        return itemRepository.findItems();
+        return itemRepository.findAll();
     }
 
     public List<Item> findItemsFromUser(User user){
-        return itemRepository.findItemsByOwner(user);
+        return itemRepository.findByOwner(user);
     }
 
     public Optional<List<Item>> findItemsByClothes(UUID id){
-        return clothesRepository.find(id).map(itemRepository::findItemsByCategory);
+        return clothesRepository.find(id).map(itemRepository::findByCategory);
     }
 
     public Optional<List<Item>> findItemsByUser(UUID id){
-        return userRepository.find(id).map(itemRepository::findItemsByOwner);
+        return userRepository.find(id).map(itemRepository::findByOwner);
     }
 
     public Optional<Item> findItemById(UUID id){

@@ -1,5 +1,7 @@
 package pl.app.wardrobe.clothes.repository.memory;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
@@ -11,10 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class ItemInMemoryRepository implements ItemRepository {
 
     private final DataSource dataSource;
 
+    @Inject
     public ItemInMemoryRepository(DataSource source){
         this.dataSource = source;
     }
@@ -24,10 +28,6 @@ public class ItemInMemoryRepository implements ItemRepository {
         dataSource.createItem(entity);
     }
 
-    @Override
-    public List<Item> findItems() {
-        return dataSource.findItemList();
-    }
     @Override
     public List<Item> findAll() {
         return dataSource.findItemList();
@@ -41,14 +41,14 @@ public class ItemInMemoryRepository implements ItemRepository {
     }
 
     @Override
-    public List<Item> findItemsByCategory(Clothes category) {
+    public List<Item> findByCategory(Clothes category) {
         return dataSource.findItemList().stream()
                 .filter(item -> category.equals(item.getClothesCategory()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> findItemsByOwner(User owner) {
+    public List<Item> findByOwner(User owner) {
         return dataSource.findItemList().stream()
                 .filter(item -> owner.equals(item.getOwner()))
                 .collect(Collectors.toList());

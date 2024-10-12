@@ -1,8 +1,11 @@
 package pl.app.wardrobe.datasource;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
-import pl.app.wardrobe.serialization.CloningSerialization;
+import pl.app.wardrobe.serialization.CloningComponent;
 import pl.app.wardrobe.user.entity.User;
 
 import java.util.HashSet;
@@ -12,6 +15,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /* alternative for database to present servlet */
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class DataSource {
 
     /* entities */
@@ -19,9 +24,10 @@ public class DataSource {
     private final Set<Clothes> clothes = new HashSet<>();
     private final Set<User> users = new HashSet<>();
     /* serialization */
-    private final CloningSerialization serialization;
+    private final CloningComponent serialization;
 
-    public DataSource(CloningSerialization serialization){
+    @Inject
+    public DataSource(CloningComponent serialization){
         this.serialization = serialization;
     }
 
@@ -57,25 +63,6 @@ public class DataSource {
         }
     }
 
-    private Item cloneWithRelationships(Item item) {
-        Item entity = serialization.clone(item);
-        if (entity.getOwner() != null) {
-            entity.setOwner(users.stream()
-                    .filter(user -> user.getId().equals(item.getOwner().getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("User not found")));
-        }
-
-        if (entity.getClothesCategory() != null) {
-            entity.setClothesCategory(clothes.stream()
-                    .filter(clothes -> clothes.getId().equals(item.getClothesCategory().getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Clothes not found")));
-        }
-
-        return entity;
-    }
-
     /* clothes */
     /* CRUD order */
     public synchronized void createClothes(Clothes createClothes) throws IllegalArgumentException {
@@ -89,6 +76,20 @@ public class DataSource {
         return clothes.stream()
                 .map(serialization::clone)
                 .collect(Collectors.toList());
+    }
+
+    public synchronized void updateClothes(Clothes updateClothes) throws IllegalArgumentException {
+        if (clothes.removeIf(clothesItem -> clothesItem.getId().equals(updateClothes.getId()))) {
+            clothes.add(serialization.clone(updateClothes));
+        } else {
+            throw new IllegalArgumentException("clothes not found");
+        }
+    }
+
+    public synchronized void deleteClothes(UUID id )throws IllegalArgumentException {
+        if (!clothes.removeIf(clothes -> clothes.getId().equals(id))) {
+            throw new IllegalArgumentException("Clothes not found");
+        }
     }
 
     /* user */
@@ -121,5 +122,22 @@ public class DataSource {
         }
     }
 
+    private Item cloneWithRelationships(Item item) {
+        Item entity = serialization.clone(item);
+        if (entity.getOwner() != null) {
+            entity.setOwner(users.stream()
+                    .filter(user -> user.getId().equals(item.getOwner().getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("User not found")));
+        }
 
+        if (entity.getClothesCategory() != null) {
+            entity.setClothesCategory(clothes.stream()
+                    .filter(clothes -> clothes.getId().equals(item.getClothesCategory().getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Clothes not found")));
+        }
+
+        return entity;
+    }
 }

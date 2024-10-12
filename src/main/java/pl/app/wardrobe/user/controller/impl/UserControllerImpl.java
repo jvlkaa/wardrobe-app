@@ -1,5 +1,8 @@
 package pl.app.wardrobe.user.controller.impl;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import pl.app.wardrobe.controller.servlet.exception.BadRequestException;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
@@ -20,10 +23,12 @@ import java.nio.file.Files;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestScoped
 public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final DtoFunctionFactory factory;
 
+    @Inject
     public UserControllerImpl(UserService userService, DtoFunctionFactory factory){
         this.userService = userService;
         this.factory = factory;

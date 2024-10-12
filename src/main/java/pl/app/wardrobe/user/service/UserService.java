@@ -1,5 +1,8 @@
 package pl.app.wardrobe.user.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.crypto.PasswordHash;
 import pl.app.wardrobe.user.entity.User;
@@ -13,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class UserService {
     private final UserRepository userRepository;
 
@@ -20,10 +25,11 @@ public class UserService {
 
     private final String avatarPath;
 
-    public UserService(UserRepository userRepository, PasswordHash passwordHash, String path){
+    @Inject
+    public UserService(UserRepository userRepository, PasswordHash passwordHash){
         this.userRepository = userRepository;
         this.passwordHash = passwordHash;
-        this.avatarPath = path;
+        this.avatarPath = "D:\\studia\\semestr 7\\narzedzia-i-aplikacje-jakarta-ee\\wardrobe-app\\src\\avatars";
     }
 
     /* CRUD order */

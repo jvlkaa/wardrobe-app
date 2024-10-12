@@ -1,5 +1,7 @@
 package pl.app.wardrobe.clothes.controller.impl;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.app.wardrobe.clothes.controller.api.ItemController;
 import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
@@ -8,15 +10,18 @@ import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
+import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
 
 import java.io.InputStream;
 import java.util.UUID;
 
+@RequestScoped
 public class ItemControllerImpl implements ItemController {
     private final ItemService itemService;
     private final DtoFunctionFactory factory;
 
+    @Inject
     public ItemControllerImpl(ItemService itemService, DtoFunctionFactory factory){
         this.itemService = itemService;
         this.factory = factory;
@@ -28,7 +33,7 @@ public class ItemControllerImpl implements ItemController {
             itemService.create(factory.requestToItem().apply(id, request));
         }
         catch (IllegalArgumentException e){
-            throw new NotFoundException();
+            throw new ResourceConflictException();
         }
     }
 
@@ -37,15 +42,16 @@ public class ItemControllerImpl implements ItemController {
         return factory.itemListToResponse().apply(itemService.findItems());
     }
 
+
     @Override
-    public GetItemListResponse getClothesItemList(UUID id) {
+    public GetItemListResponse getItemListFromClothes(UUID id) {
         return itemService.findItemsByClothes(id)
                 .map(factory.itemListToResponse())
                 .orElseThrow(NotFoundException::new);
     }
 
     @Override
-    public GetItemListResponse getUserItemList(UUID id) {
+    public GetItemListResponse getItemListFromUser(UUID id) {
         return itemService.findItemsByUser(id)
                 .map(factory.itemListToResponse())
                 .orElseThrow(NotFoundException::new);
@@ -58,13 +64,6 @@ public class ItemControllerImpl implements ItemController {
                 .orElseThrow(NotFoundException::new);
     }
 
-//    @Override
-//    public byte[] getItemPhoto(UUID id) {
-//        return itemService.findItemById(id)
-//                .map(Item::getAvatar)
-//                .orElseThrow(NotFoundException::new);
-//    }
-
     @Override
     public void patchItem(UUID id, PatchItemRequest request) {
         itemService.findItemById(id).ifPresentOrElse(
@@ -74,16 +73,6 @@ public class ItemControllerImpl implements ItemController {
                 }
         );
     }
-
-//    @Override
-//    public void patchItemPhoto(UUID id, InputStream photo) {
-//        itemService.findItemById(id).ifPresentOrElse(
-//                entity -> itemService.updatePhoto(id, photo),
-//                () -> {
-//                    throw new NotFoundException();
-//                }
-//        );
-//    }
 
     @Override
     public void deleteItem(UUID id) {

@@ -8,6 +8,4 @@ import java.util.UUID;
 
 public interface ClothesRepository extends Repository<Clothes, UUID> {
 
-    List<Clothes> findClothesList();
-    Optional<Clothes> findClothes(UUID id);
 }

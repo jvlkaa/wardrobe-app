@@ -1,5 +1,6 @@
 package pl.app.wardrobe.crypto;
 
+import jakarta.enterprise.context.Dependent;
 import lombok.SneakyThrows;
 
 import javax.crypto.SecretKeyFactory;
@@ -10,6 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
 
+@Dependent
 public class PasswordHash {
     /* hash parameters */
     private static final int ITERATIONS = 10000;
