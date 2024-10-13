@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @ApplicationScoped
 @NoArgsConstructor(force = true)
-
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ClothesRepository clothesRepository;

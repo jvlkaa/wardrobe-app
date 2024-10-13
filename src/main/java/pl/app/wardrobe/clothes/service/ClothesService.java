@@ -13,7 +13,6 @@ import java.util.UUID;
 
 @ApplicationScoped
 @NoArgsConstructor(force = true)
-
 public class ClothesService {
     private final ClothesRepository clothesRepository;
 

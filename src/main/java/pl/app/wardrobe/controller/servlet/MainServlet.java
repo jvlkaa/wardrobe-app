@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
         MainServlet.Paths.MAIN + "/*"})
 @MultipartConfig(maxFileSize = 200 * 1024)
 public class MainServlet extends HttpServlet {
-    private ItemController itemController;
-    private ClothesController clothesController;
-    private UserController userController;
+    private final ItemController itemController;
+    private final ClothesController clothesController;
+    private final UserController userController;
     private final Jsonb jsonb = JsonbBuilder.create();
     public static final class Paths {
         public static final String MAIN = "/main";
@@ -96,13 +96,6 @@ public class MainServlet extends HttpServlet {
         }
     }
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        itemController = (ItemController) getServletContext().getAttribute("itemController");
-        clothesController =   (ClothesController) getServletContext().getAttribute("clothesController");
-        userController = (UserController) getServletContext().getAttribute("userController");
-    }
 
     /* url creation */
     public static String createUrl(HttpServletRequest request, String... paths) {
