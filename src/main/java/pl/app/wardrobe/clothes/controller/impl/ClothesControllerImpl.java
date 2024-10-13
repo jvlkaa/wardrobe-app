@@ -8,6 +8,7 @@ import pl.app.wardrobe.clothes.dto.GetClothesResponse;
 import pl.app.wardrobe.clothes.dto.PatchClothesRequest;
 import pl.app.wardrobe.clothes.dto.PutClothesRequest;
 import pl.app.wardrobe.clothes.service.ClothesService;
+import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
@@ -18,11 +19,13 @@ import java.util.UUID;
 public class ClothesControllerImpl implements ClothesController {
 
     private final ClothesService clothesService;
+    private final ItemService itemService;
     private final DtoFunctionFactory factory;
 
     @Inject
-    public ClothesControllerImpl(ClothesService clothesService, DtoFunctionFactory dtoFunctionFactory){
+    public ClothesControllerImpl(ClothesService clothesService, ItemService itemService, DtoFunctionFactory dtoFunctionFactory){
         this.clothesService = clothesService;
+        this.itemService = itemService;
         this.factory = dtoFunctionFactory;
     }
 
@@ -61,7 +64,15 @@ public class ClothesControllerImpl implements ClothesController {
     @Override
     public void deleteClothes(UUID id) {
         clothesService.findClothesById(id).ifPresentOrElse(
-                entity -> clothesService.delete(id),
+                entity -> {
+                    itemService.findItemsByClothes(id).ifPresentOrElse(
+                            items -> items.forEach( item -> itemService.delete(item.getId())),
+                            () -> {
+                                throw new NotFoundException();
+                            }
+                    );
+                    clothesService.delete(id);
+                },
                 () -> {
                     throw new NotFoundException();
                 }

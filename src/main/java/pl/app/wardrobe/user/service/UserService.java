@@ -2,6 +2,7 @@ package pl.app.wardrobe.user.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.ServletContext;
 import lombok.NoArgsConstructor;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.crypto.PasswordHash;
@@ -26,10 +27,10 @@ public class UserService {
     private final String avatarPath;
 
     @Inject
-    public UserService(UserRepository userRepository, PasswordHash passwordHash){
+    public UserService(UserRepository userRepository, PasswordHash passwordHash, ServletContext servletContext){
         this.userRepository = userRepository;
         this.passwordHash = passwordHash;
-        this.avatarPath = "D:\\studia\\semestr 7\\narzedzia-i-aplikacje-jakarta-ee\\wardrobe-app\\src\\avatars";
+        this.avatarPath = servletContext.getInitParameter("avatarsPath");
     }
 
     /* CRUD order */
