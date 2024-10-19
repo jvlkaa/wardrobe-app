@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+
+        <article class="text--justified">
+            <header><h2> Clothes: </h2></header>
+
+            <h:dataTable value="#{clothesList.clothes_list.clothesList}" var="clothes"
+                         styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{clothes.name}"/>
+                </h:column>
+
+<!--                <h:column>-->
+<!--                    <f:facet name="header">See details</f:facet>-->
+<!--                    <h:link outcome="/clothes/clothes_view.xhtml" value="View">-->
+<!--                        <f:param name="id" value="#{clothes.id}"/>-->
+<!--                    </h:link>-->
+<!--                </h:column>-->
+
+                <h:column>
+                    <f:facet name="header">Delete</f:facet>
+                    <h:form>
+                        <h:commandButton styleClass="btn" value="Delete"
+                                         action="#{clothesList.deleteAction(clothes)}"/>
+                    </h:form>
+                </h:column>
+
+            </h:dataTable>
+        </article>
+    </ui:define>
+
+</ui:composition>

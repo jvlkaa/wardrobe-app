@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{itemCreate.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2> Add your clothing to wardrobe </h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn" value="Previous" disabled="true"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Next"
+                                         action="#{itemCreate.goToConfirmAction()}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="name" value="#{itemCreate.item.name}" styleClass="form-control"/>
+                            <h:outputLabel for="name" value="Name:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputTextarea id="size" value="#{itemCreate.item.size}"
+                                             styleClass="form-control" rows="4"/>
+                            <h:outputLabel for="size" value="Size: (XXS - XXL)" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputTextarea id="color" value="#{itemCreate.item.color}"
+                                             styleClass="form-control" rows="4"/>
+                            <h:outputLabel for="color" value="Color:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputTextarea id="purchase-date" value="#{itemCreate.item.purchaseDate}"
+                                             styleClass="form-control" rows="4"/>
+                            <h:outputLabel for="purchase-date" value="Purchase date: (YYYY-MM-DD)" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 p-2">
+                    <fieldset>
+                        <legend class="form-label fs-6">Clothes category:</legend>
+                        <ui:repeat value="#{itemCreate.clothes_list}" var="clothesCategory">
+                            <div class="form-check">
+                                <h:selectOneRadio id="radioId" group="clothesCategory"
+                                                  value="#{itemCreate.item.clothesCategory}"
+                                                  styleClass="form-check-input"
+                                                  enabledClass="form-check-label">
+                                    <f:selectItem itemValue="#{clothesCategory}" itemLabel="#{clothesCategory.name}"/>
+                                </h:selectOneRadio>
+                            </div>
+                        </ui:repeat>
+                    </fieldset>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                                         action="#{itemCreate.cancelAction()}"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

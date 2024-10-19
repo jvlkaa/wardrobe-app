@@ -24,11 +24,11 @@ public class DataSource {
     private final Set<Clothes> clothes = new HashSet<>();
     private final Set<User> users = new HashSet<>();
     /* serialization */
-    private final CloningComponent serialization;
+    private final CloningComponent cloning;
 
     @Inject
-    public DataSource(CloningComponent serialization){
-        this.serialization = serialization;
+    public DataSource(CloningComponent cloning){
+        this.cloning = cloning;
     }
 
     /* item */
@@ -44,7 +44,7 @@ public class DataSource {
 
     public synchronized List<Item> findItemList() {
         return items.stream()
-                .map(serialization::clone)
+                .map(cloning::clone)
                 .collect(Collectors.toList());
     }
 
@@ -69,18 +69,18 @@ public class DataSource {
         if (clothes.stream().anyMatch(clothes -> clothes.getId().equals(createClothes.getId()))) {
             throw new IllegalArgumentException("Id is not unique");
         }
-        clothes.add(serialization.clone(createClothes));
+        clothes.add(cloning.clone(createClothes));
     }
 
     public synchronized List<Clothes> findClothesList() {
         return clothes.stream()
-                .map(serialization::clone)
+                .map(cloning::clone)
                 .collect(Collectors.toList());
     }
 
     public synchronized void updateClothes(Clothes updateClothes) throws IllegalArgumentException {
         if (clothes.removeIf(clothesItem -> clothesItem.getId().equals(updateClothes.getId()))) {
-            clothes.add(serialization.clone(updateClothes));
+            clothes.add(cloning.clone(updateClothes));
         } else {
             throw new IllegalArgumentException("clothes not found");
         }
@@ -98,19 +98,19 @@ public class DataSource {
         if (users.stream().anyMatch(item -> item.getId().equals(createUser.getId()))) {
             throw new IllegalArgumentException("Is is not unique");
         }
-        users.add(serialization.clone(createUser));
+        users.add(cloning.clone(createUser));
     }
 
     public synchronized List<User> findUserList() {
         return users.stream()
-                .map(serialization::clone)
+                .map(cloning::clone)
                 .collect(Collectors.toList());
     }
 
 
     public synchronized void updateUser(User updateUser) throws IllegalArgumentException {
         if (users.removeIf(item -> item.getId().equals(updateUser.getId()))) {
-            users.add(serialization.clone(updateUser));
+            users.add(cloning.clone(updateUser));
         } else {
             throw new IllegalArgumentException("user not found");
         }
@@ -123,7 +123,7 @@ public class DataSource {
     }
 
     private Item cloneWithRelationships(Item item) {
-        Item entity = serialization.clone(item);
+        Item entity = cloning.clone(item);
         if (entity.getOwner() != null) {
             entity.setOwner(users.stream()
                     .filter(user -> user.getId().equals(item.getOwner().getId()))

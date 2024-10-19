@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{itemCreate.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2> Add clothing to wardrobe </h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                                         action="#{itemCreate.goToBasicAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn" value="Next" disabled="true"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Category
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{itemCreate.item.clothesCategory.name}"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Size
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{itemCreate.item.size}"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Color
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{itemCreate.item.color}"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Purchase date
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{itemCreate.item.purchaseDate}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-primary" value="Create"
+                                         action="#{itemCreate.saveAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                                         action="#{itemCreate.cancelAction()}"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

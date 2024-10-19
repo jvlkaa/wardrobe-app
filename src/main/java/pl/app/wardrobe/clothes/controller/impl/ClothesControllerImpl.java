@@ -11,7 +11,7 @@ import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
-import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
+import pl.app.wardrobe.factory.DtoFunctionFactory;
 
 import java.util.UUID;
 

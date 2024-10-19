@@ -2,26 +2,19 @@ package pl.app.wardrobe.user.controller.impl;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import lombok.NoArgsConstructor;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.BadRequestException;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
-import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
+import pl.app.wardrobe.factory.DtoFunctionFactory;
 import pl.app.wardrobe.user.controller.api.UserController;
 import pl.app.wardrobe.user.dto.GetUserResponse;
 import pl.app.wardrobe.user.dto.GetUsersResponse;
 import pl.app.wardrobe.user.dto.PatchUserRequest;
 import pl.app.wardrobe.user.dto.PutUserRequest;
-import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.service.UserService;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequestScoped

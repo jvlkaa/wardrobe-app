@@ -7,13 +7,11 @@ import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
-import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
-import pl.app.wardrobe.dtofactory.DtoFunctionFactory;
+import pl.app.wardrobe.factory.DtoFunctionFactory;
 
-import java.io.InputStream;
 import java.util.UUID;
 
 @RequestScoped

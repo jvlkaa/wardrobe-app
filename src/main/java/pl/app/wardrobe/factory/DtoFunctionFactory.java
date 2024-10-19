@@ -1,8 +1,6 @@
-package pl.app.wardrobe.dtofactory;
+package pl.app.wardrobe.factory;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import pl.app.wardrobe.clothes.dto.PatchClothesRequest;
-import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.function.*;
 import pl.app.wardrobe.user.dto.function.*;
 
