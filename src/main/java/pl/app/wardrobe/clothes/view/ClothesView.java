@@ -10,6 +10,7 @@ import lombok.Setter;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.model.ClothesModel;
+import pl.app.wardrobe.clothes.model.ItemListModel;
 import pl.app.wardrobe.clothes.model.ItemModel;
 import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
@@ -17,6 +18,8 @@ import pl.app.wardrobe.factory.ModelFunctionFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +37,9 @@ public class ClothesView implements Serializable {
     @Getter
     private ClothesModel clothes;
 
+    private ItemListModel clothes_item_list;
+
+
     @Inject
     public ClothesView( ClothesService clothesService, ItemService itemService, ModelFunctionFactory factory) {
         this.clothesService = clothesService;
@@ -49,5 +55,17 @@ public class ClothesView implements Serializable {
         } else {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Clothes not found");
         }
+    }
+
+    public ItemListModel getClothes_item_list() {
+        if (clothes_item_list == null) {
+            clothes_item_list = factory.itemListToModel().apply(itemService.findItemsByClothes(clothes.getId()));
+        }
+        return clothes_item_list;
+    }
+
+    public String deleteAction(ItemListModel.Item item) {
+        itemService.delete(item.getId());
+        return "clothes_view?faces-redirect=true&id=" + id;
     }
 }

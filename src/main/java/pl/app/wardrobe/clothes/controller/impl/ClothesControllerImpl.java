@@ -7,12 +7,13 @@ import pl.app.wardrobe.clothes.dto.GetClothesListResponse;
 import pl.app.wardrobe.clothes.dto.GetClothesResponse;
 import pl.app.wardrobe.clothes.dto.PatchClothesRequest;
 import pl.app.wardrobe.clothes.dto.PutClothesRequest;
+import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
-
+import java.util.List;
 import java.util.UUID;
 
 @RequestScoped
@@ -65,12 +66,12 @@ public class ClothesControllerImpl implements ClothesController {
     public void deleteClothes(UUID id) {
         clothesService.findClothesById(id).ifPresentOrElse(
                 entity -> {
-                    itemService.findItemsByClothes(id).ifPresentOrElse(
-                            items -> items.forEach( item -> itemService.delete(item.getId())),
-                            () -> {
-                                throw new NotFoundException();
-                            }
-                    );
+                    List<Item> items = itemService.findItemsByClothes(id);
+                    if (items.isEmpty()) {
+                        throw new NotFoundException();
+                    }
+                    items.forEach(item -> itemService.delete(item.getId()));
+
                     clothesService.delete(id);
                 },
                 () -> {

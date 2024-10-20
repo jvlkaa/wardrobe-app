@@ -6,7 +6,6 @@
                 template="/WEB-INF/template/main.xhtml">
 
     <ui:define name="content">
-<!--        <h:outputStylesheet library="item" name="css/item_list.css"/>-->
 
         <article class="text--justified">
             <header><h2> Items: </h2></header>
@@ -43,7 +42,7 @@
 
                 <f:facet name="footer">
                     <h:button styleClass="btn" outcome="/item/item_create.xhtml"
-                              value="Create new clothing"/>
+                              value="Create new clothing" style="background-color: #ffa6d6;"/>
                 </f:facet>
             </h:dataTable>
         </article>

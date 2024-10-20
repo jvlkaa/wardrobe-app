@@ -102,7 +102,7 @@ public class InitializedData implements ServletContextListener {
         Clothes cottonTShirt = Clothes.builder()
                 .id(UUID.fromString("6f14bc1d-2a49-4f70-87ae-923b4bbd572e"))
                 .name("T-Shirt")
-                .material(List.of(Material.COTTON))
+                .material(List.of(Material.COTTON, Material.POLYESTER))
                 .build();
 
         Clothes leatherJacket = Clothes.builder()

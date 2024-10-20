@@ -8,7 +8,7 @@
     <ui:define name="content">
 
         <article class="text--justified">
-            <header><h2> Clothes: </h2></header>
+            <header><h2> Clothes Categories: </h2></header>
 
             <h:dataTable value="#{clothesList.clothes_list.clothesList}" var="clothes"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
@@ -18,12 +18,12 @@
                     <h:outputText value="#{clothes.name}"/>
                 </h:column>
 
-<!--                <h:column>-->
-<!--                    <f:facet name="header">See details</f:facet>-->
-<!--                    <h:link outcome="/clothes/clothes_view.xhtml" value="View">-->
-<!--                        <f:param name="id" value="#{clothes.id}"/>-->
-<!--                    </h:link>-->
-<!--                </h:column>-->
+                <h:column>
+                    <f:facet name="header">See details</f:facet>
+                    <h:link outcome="/clothes/clothes_view.xhtml" value="View">
+                        <f:param name="id" value="#{clothes.id}"/>
+                    </h:link>
+                </h:column>
 
                 <h:column>
                     <f:facet name="header">Delete</f:facet>

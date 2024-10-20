@@ -5,7 +5,6 @@ import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
-import pl.app.wardrobe.user.entity.User;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,0 +1,47 @@
+header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #ffa6d6;
+    border-radius: 10px;
+}
+
+
+.img-fluid {
+    max-width: 50px;
+    height: auto;
+    margin-right: 15px;
+    box-shadow: 0 2px 5px;
+    border-radius: 10px;
+}
+
+html, body{
+    background-color: lavender;
+}
+
+h2{
+    margin: 10px;
+}
+
+nav, footer{
+    border-radius: 10px;
+}
+
+section {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px;
+    margin: 0 auto;
+}
+
+p{
+    color: black
+}
+
+.col-4{
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin: 5px 0;
+}
+

@@ -7,11 +7,13 @@ import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
+import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequestScoped
@@ -43,9 +45,11 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     public GetItemListResponse getItemListFromClothes(UUID id) {
-        return itemService.findItemsByClothes(id)
-                .map(factory.itemListToResponse())
-                .orElseThrow(NotFoundException::new);
+        List<Item> items = itemService.findItemsByClothes(id);
+        if (items.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return factory.itemListToResponse().apply(items);
     }
 
     @Override

@@ -3,6 +3,7 @@ package pl.app.wardrobe.clothes.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
+import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
@@ -43,8 +44,9 @@ public class ItemService {
         return itemRepository.findByOwner(user);
     }
 
-    public Optional<List<Item>> findItemsByClothes(UUID id){
-        return clothesRepository.find(id).map(itemRepository::findByCategory);
+
+    public List<Item> findItemsByClothes(UUID id){
+        return itemRepository.findByCategory(id);
     }
 
     public Optional<List<Item>> findItemsByUser(UUID id){

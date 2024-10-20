@@ -41,9 +41,9 @@ public class ItemInMemoryRepository implements ItemRepository {
     }
 
     @Override
-    public List<Item> findByCategory(Clothes category) {
+    public List<Item> findByCategory(UUID category) {
         return dataSource.findItemList().stream()
-                .filter(item -> category.equals(item.getClothesCategory()))
+                .filter(item -> category.equals(item.getClothesCategory().getId()))
                 .collect(Collectors.toList());
     }
 

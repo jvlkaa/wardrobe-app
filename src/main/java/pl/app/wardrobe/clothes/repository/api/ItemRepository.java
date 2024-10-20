@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ItemRepository extends Repository<Item, UUID> {
 
-    List<Item> findByCategory(Clothes category);
+    List<Item> findByCategory(UUID category);
     List<Item> findByOwner(User owner);
     Optional<Item> findByIdFromUser(User user, UUID id);
 

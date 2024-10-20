@@ -49,8 +49,7 @@ public class ItemEdit implements Serializable {
 
     public String saveAction() {
         itemService.update(factory.updateItem().apply(itemService.findItemById(id).orElseThrow(), item));
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
+        return "/item/item_list.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
 }

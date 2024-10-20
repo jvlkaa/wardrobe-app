@@ -12,6 +12,7 @@ public class ClothesToModelFunction  implements Function<Clothes, ClothesModel>,
     @Override
     public ClothesModel apply(Clothes entity){
         return ClothesModel.builder()
+                .id(entity.getId())
                 .name(entity.getName())
                 .material(entity.getMaterial().stream()
                         .map(material -> Material.valueOf(material.name()))
