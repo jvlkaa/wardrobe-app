@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ItemCreateModel {
     private UUID id;
     private String name;
-    private String size;
+    private Size size;
     private String color;
     private LocalDate purchaseDate;
     private ClothesShortModel clothesCategory;

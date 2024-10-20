@@ -16,13 +16,12 @@ public class ModelToItemFunction implements Function<ItemCreateModel, Item>, Ser
         return Item.builder()
                 .id(model.getId())
                 .name(model.getName())
-                .size(Size.valueOf(model.getSize()))
+                .size(model.getSize())
                 .color(model.getColor())
                 .purchaseDate(model.getPurchaseDate())
                 .clothesCategory(Clothes.builder()
                         .id(model.getClothesCategory().getId())
                         .build())
                 .build();
-
     }
 }

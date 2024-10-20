@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.app.wardrobe.clothes.entity.Size;
 import pl.app.wardrobe.clothes.model.ClothesShortModel;
 import pl.app.wardrobe.clothes.model.ItemCreateModel;
 import pl.app.wardrobe.clothes.service.ClothesService;
@@ -13,6 +14,7 @@ import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.factory.ModelFunctionFactory;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -80,6 +82,10 @@ public class ItemCreate implements Serializable {
 
     public String getConversationId() {
         return conversation.getId();
+    }
+
+    public List<Size> getAvailableSizes() {
+        return Arrays.asList(Size.values());
     }
 
 }
