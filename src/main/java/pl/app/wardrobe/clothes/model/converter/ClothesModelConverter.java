@@ -28,8 +28,8 @@ public class ClothesModelConverter implements Converter<ClothesShortModel> {
         if (value == null || value.isBlank()) {
             return null;
         }
-        Optional<Clothes> profession = clothesService.findClothesById(UUID.fromString(value));
-        return profession.map(factory.clothesShortToModel()).orElse(null);
+        Optional<Clothes> clothes = clothesService.findClothesById(UUID.fromString(value));
+        return clothes.map(factory.clothesShortToModel()).orElse(null);
     }
 
     @Override
