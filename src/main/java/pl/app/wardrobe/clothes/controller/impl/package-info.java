@@ -1,1 +1,0 @@
-package pl.app.wardrobe.clothes.controller.impl;

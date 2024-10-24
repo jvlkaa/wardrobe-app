@@ -1,42 +1,55 @@
-package pl.app.wardrobe.clothes.controller.impl;
-
-import jakarta.enterprise.context.RequestScoped;
+package pl.app.wardrobe.clothes.controller.rest;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import pl.app.wardrobe.clothes.controller.api.ClothesController;
 import pl.app.wardrobe.clothes.dto.GetClothesListResponse;
 import pl.app.wardrobe.clothes.dto.GetClothesResponse;
 import pl.app.wardrobe.clothes.dto.PatchClothesRequest;
 import pl.app.wardrobe.clothes.dto.PutClothesRequest;
-import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ClothesService;
-import pl.app.wardrobe.clothes.service.ItemService;
-import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
-import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
-import java.util.List;
+import jakarta.ws.rs.NotFoundException;
 import java.util.UUID;
 
-@RequestScoped
-public class ClothesControllerImpl implements ClothesController {
-
+@Path("")
+public class ClothesRestController implements ClothesController {
     private final ClothesService clothesService;
-    private final ItemService itemService;
     private final DtoFunctionFactory factory;
+    private final UriInfo uriInfo;
+    private HttpServletResponse response;
+
+    @Context
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
 
     @Inject
-    public ClothesControllerImpl(ClothesService clothesService, ItemService itemService, DtoFunctionFactory dtoFunctionFactory){
+    public ClothesRestController(ClothesService clothesService, DtoFunctionFactory dtoFunctionFactory,
+                                 @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
         this.clothesService = clothesService;
-        this.itemService = itemService;
         this.factory = dtoFunctionFactory;
+        this.uriInfo = uriInfo;
     }
 
     @Override
     public void putClothes(UUID id, PutClothesRequest request) {
         try{
             clothesService.create(factory.requestToClothes().apply(id, request));
+            response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                    .path(ClothesController.class, "getClothes")
+                    .build(id)
+                    .toString());
+            throw new WebApplicationException(Response.Status.CREATED);
+
         }
         catch (IllegalArgumentException e){
-            throw new ResourceConflictException();
+            throw new BadRequestException(e);
         }
     }
 
@@ -65,15 +78,7 @@ public class ClothesControllerImpl implements ClothesController {
     @Override
     public void deleteClothes(UUID id) {
         clothesService.findClothesById(id).ifPresentOrElse(
-                entity -> {
-                    List<Item> items = itemService.findItemsByClothes(id);
-                    if (items.isEmpty()) {
-                        throw new NotFoundException();
-                    }
-                    items.forEach(item -> itemService.delete(item.getId()));
-
-                    clothesService.delete(id);
-                },
+                entity -> clothesService.delete(id),
                 () -> {
                     throw new NotFoundException();
                 }

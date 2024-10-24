@@ -2,8 +2,7 @@ package pl.app.wardrobe.user.repository.memory;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import pl.app.wardrobe.clothes.entity.Item;
-import pl.app.wardrobe.datasource.DataSource;
+import pl.app.wardrobe.datasource.component.DataSource;
 import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.repository.api.UserRepository;
 

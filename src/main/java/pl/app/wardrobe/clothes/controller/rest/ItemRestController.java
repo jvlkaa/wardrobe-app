@@ -1,7 +1,13 @@
-package pl.app.wardrobe.clothes.controller.impl;
+package pl.app.wardrobe.clothes.controller.rest;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import pl.app.wardrobe.clothes.controller.api.ItemController;
 import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
@@ -9,31 +15,45 @@ import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ItemService;
-import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
-import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
+import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
 import java.util.UUID;
 
-@RequestScoped
-public class ItemControllerImpl implements ItemController {
+@Path("")
+public class ItemRestController implements ItemController {
     private final ItemService itemService;
     private final DtoFunctionFactory factory;
+    private final UriInfo uriInfo;
+    private HttpServletResponse response;
+
+    @Context
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
 
     @Inject
-    public ItemControllerImpl(ItemService itemService, DtoFunctionFactory factory){
+    public ItemRestController(ItemService itemService, DtoFunctionFactory factory,
+                              @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
         this.itemService = itemService;
         this.factory = factory;
+        this.uriInfo = uriInfo;
     }
 
     @Override
     public void putItem(UUID id, PutItemRequest request){
         try{
             itemService.create(factory.requestToItem().apply(id, request));
+            response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                    .path(ItemController.class, "getItem")
+                    .build(id)
+                    .toString());
+            throw new WebApplicationException(Response.Status.CREATED);
+
         }
         catch (IllegalArgumentException e){
-            throw new ResourceConflictException();
+            throw new BadRequestException(e);
         }
     }
 
@@ -47,7 +67,7 @@ public class ItemControllerImpl implements ItemController {
     public GetItemListResponse getItemListFromClothes(UUID id) {
         List<Item> items = itemService.findItemsByClothes(id);
         if (items.isEmpty()) {
-            throw new NotFoundException();
+            throw new BadRequestException();
         }
         return factory.itemListToResponse().apply(items);
     }

@@ -1,4 +1,4 @@
-package pl.app.wardrobe.datasource;
+package pl.app.wardrobe.datasource.component;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -89,6 +89,9 @@ public class DataSource {
     public synchronized void deleteClothes(UUID id )throws IllegalArgumentException {
         if (!clothes.removeIf(clothes -> clothes.getId().equals(id))) {
             throw new IllegalArgumentException("Clothes not found");
+        }
+        else{
+            items.removeIf(item -> item.getClothesCategory().getId().equals(id));
         }
     }
 
