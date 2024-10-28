@@ -20,5 +20,4 @@ public class PutItemRequest {
     private Size size;
     private String color;
     private LocalDate purchaseDate;
-    private UUID clothesCategory;
 }

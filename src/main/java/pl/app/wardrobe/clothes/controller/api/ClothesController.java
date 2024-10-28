@@ -9,30 +9,30 @@ import pl.app.wardrobe.clothes.dto.PutClothesRequest;
 
 import java.util.UUID;
 
-@Path("")
+@Path("/clothes")
 public interface ClothesController {
 
     @PUT
-    @Path("/clothes/{id}")
+    @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     void putClothes(@PathParam("id") UUID id, PutClothesRequest request);
 
     @GET
-    @Path("/clothesList")
+    @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     GetClothesListResponse getClothesList();
 
     @GET
-    @Path("/clothes/{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     GetClothesResponse getClothes(@PathParam("id") UUID id);
 
     @PATCH
-    @Path("/clothes/{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     void patchClothes(@PathParam("id") UUID id, PatchClothesRequest request);
 
     @DELETE
-    @Path("/clothes/{id}")
+    @Path("/{id}")
     void deleteClothes(@PathParam("id") UUID id);
 }

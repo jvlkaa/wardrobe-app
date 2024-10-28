@@ -10,40 +10,40 @@ import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import java.io.InputStream;
 import java.util.UUID;
 
-@Path("")
+@Path("/clothes/{clothesId}/items")
 public interface ItemController {
 
     @PUT
-    @Path("/item/{id}")
+    @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    void putItem(@PathParam("id") UUID id, PutItemRequest request);
+    void putItem(@PathParam("clothesId") UUID clothesId, @PathParam("id") UUID id, PutItemRequest request);
+
+//    @GET
+//    @Path("")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    GetItemListResponse getItemList();
 
     @GET
-    @Path("/itemList")
-    @Produces(MediaType.APPLICATION_JSON)
-    GetItemListResponse getItemList();
-
-    @GET
-    @Path("/item/{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     GetItemResponse getItem(@PathParam("id") UUID id);
 
     @GET
-    @Path("/clothes/{id}/itemList")
+    @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    GetItemListResponse getItemListFromClothes(@PathParam("id") UUID id);
+    GetItemListResponse getItemListFromClothes(@PathParam("clothesId") UUID id);
 
     @GET
-    @Path("/user/{id}/itemList/")
+    @Path("/user/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     GetItemListResponse getItemListFromUser(@PathParam("id") UUID id);
 
     @PATCH
-    @Path("/item/{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    void patchItem(@PathParam("id") UUID id, PatchItemRequest request);
+    void patchItem( @PathParam("id") UUID id, PatchItemRequest request);
 
     @DELETE
-    @Path("/item/{id}")
-    void deleteItem(@PathParam("id") UUID id);
+    @Path("/{id}")
+    void deleteItem( @PathParam("id") UUID id);
 }

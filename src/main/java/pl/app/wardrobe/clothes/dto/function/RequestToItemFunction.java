@@ -5,11 +5,10 @@ import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
 
 import java.util.UUID;
-import java.util.function.BiFunction;
 
-public class RequestToItemFunction implements BiFunction<UUID, PutItemRequest, Item> {
+public class RequestToItemFunction implements TriFunction<UUID, UUID, PutItemRequest, Item> {
     @Override
-    public Item apply (UUID id, PutItemRequest request){
+    public Item apply (UUID clothesId,UUID id, PutItemRequest request){
         return Item.builder()
                 .id(id)
                 .name(request.getName())
@@ -17,7 +16,7 @@ public class RequestToItemFunction implements BiFunction<UUID, PutItemRequest, I
                 .color(request.getColor())
                 .purchaseDate(request.getPurchaseDate())
                 .clothesCategory(Clothes.builder()
-                        .id(request.getClothesCategory())
+                        .id(clothesId)
                         .build())
                 .build();
     }

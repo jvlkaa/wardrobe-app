@@ -14,6 +14,7 @@ import pl.app.wardrobe.clothes.dto.GetItemResponse;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
 import pl.app.wardrobe.clothes.entity.Item;
+import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
 import jakarta.ws.rs.NotFoundException;
@@ -21,9 +22,10 @@ import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.UUID;
 
-@Path("")
+@Path("/clothes/{clothesId}/items")
 public class ItemRestController implements ItemController {
     private final ItemService itemService;
+    private final ClothesService clothesService;
     private final DtoFunctionFactory factory;
     private final UriInfo uriInfo;
     private HttpServletResponse response;
@@ -34,17 +36,18 @@ public class ItemRestController implements ItemController {
     }
 
     @Inject
-    public ItemRestController(ItemService itemService, DtoFunctionFactory factory,
+    public ItemRestController(ItemService itemService, ClothesService clothesService, DtoFunctionFactory factory,
                               @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
         this.itemService = itemService;
+        this.clothesService = clothesService;
         this.factory = factory;
         this.uriInfo = uriInfo;
     }
 
     @Override
-    public void putItem(UUID id, PutItemRequest request){
+    public void putItem(UUID clothesId, UUID id, PutItemRequest request){
         try{
-            itemService.create(factory.requestToItem().apply(id, request));
+            itemService.create(factory.requestToItem().apply(clothesId, id, request));
             response.setHeader("Location", uriInfo.getBaseUriBuilder()
                     .path(ItemController.class, "getItem")
                     .build(id)
@@ -57,10 +60,10 @@ public class ItemRestController implements ItemController {
         }
     }
 
-    @Override
-    public GetItemListResponse getItemList() {
-        return factory.itemListToResponse().apply(itemService.findItems());
-    }
+//    @Override
+//    public GetItemListResponse getItemList() {
+//        return factory.itemListToResponse().apply(itemService.findItems());
+//    }
 
 
     @Override
@@ -89,7 +92,9 @@ public class ItemRestController implements ItemController {
     @Override
     public void patchItem(UUID id, PatchItemRequest request) {
         itemService.findItemById(id).ifPresentOrElse(
-                entity -> itemService.update(factory.updateItemWithRequest().apply(entity, request)),
+                entity -> {
+                    itemService.update(factory.updateItemWithRequest().apply(entity, request));
+                },
                 () -> {
                     throw new NotFoundException();
                 }

@@ -17,7 +17,7 @@ import pl.app.wardrobe.factory.DtoFunctionFactory;
 import jakarta.ws.rs.NotFoundException;
 import java.util.UUID;
 
-@Path("")
+@Path("/clothes")
 public class ClothesRestController implements ClothesController {
     private final ClothesService clothesService;
     private final DtoFunctionFactory factory;
