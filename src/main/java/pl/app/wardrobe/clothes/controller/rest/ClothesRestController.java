@@ -1,7 +1,6 @@
 package pl.app.wardrobe.clothes.controller.rest;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;

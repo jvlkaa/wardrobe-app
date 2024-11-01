@@ -1,11 +1,17 @@
-package pl.app.wardrobe.user.controller.impl;
+package pl.app.wardrobe.user.controller.rest;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import lombok.extern.java.Log;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 import pl.app.wardrobe.clothes.service.ItemService;
-import pl.app.wardrobe.controller.servlet.exception.BadRequestException;
-import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
-import pl.app.wardrobe.controller.servlet.exception.ResourceConflictException;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
 import pl.app.wardrobe.user.controller.api.UserController;
 import pl.app.wardrobe.user.dto.GetUserResponse;
@@ -14,29 +20,48 @@ import pl.app.wardrobe.user.dto.PatchUserRequest;
 import pl.app.wardrobe.user.dto.PutUserRequest;
 import pl.app.wardrobe.user.service.UserService;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@RequestScoped
-public class UserControllerImpl implements UserController {
+@Path("/users")
+@Log
+public class UserRestControllerI implements UserController {
     private final UserService userService;
     private final ItemService itemService;
     private final DtoFunctionFactory factory;
+    private final UriInfo uriInfo;
+    private HttpServletResponse response;
+
+    @Context
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
 
     @Inject
-    public UserControllerImpl(UserService userService, ItemService itemService, DtoFunctionFactory factory){
+    public UserRestControllerI(UserService userService, ItemService itemService, DtoFunctionFactory factory,
+                               @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
         this.userService = userService;
         this.itemService = itemService;
         this.factory = factory;
+        this.uriInfo = uriInfo;
     }
 
     @Override
     public void putUser(UUID id, PutUserRequest request) {
         try{
             userService.create(factory.requestToUser().apply(id, request));
+            response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                    .path(UserController.class, "getUser")
+                    .build(id)
+                    .toString());
+            throw new WebApplicationException(Response.Status.CREATED);
+
         }
-        catch (IllegalArgumentException e){
-            throw new ResourceConflictException();
+        catch (BadRequestException e) {
+            log.log(Level.WARNING, e.getMessage(), e);
+            throw e;
         }
     }
 
@@ -97,11 +122,14 @@ public class UserControllerImpl implements UserController {
         );
     }
 
-    @Override
-    public byte[] getUserAvatar(UUID id) {
-        return userService.findUserById(id)
+    public Response getUserAvatar(UUID id) {
+        byte[] avatarBytes = userService.findUserById(id)
                 .map(user -> userService.getAvatar(id))
                 .orElseThrow(NotFoundException::new);
+
+        return Response.ok(new ByteArrayInputStream(avatarBytes))
+                .type("image/png")
+                .build();
     }
 
     @Override

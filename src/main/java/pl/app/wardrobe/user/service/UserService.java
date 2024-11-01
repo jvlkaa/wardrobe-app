@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
 import pl.app.wardrobe.crypto.PasswordHash;
@@ -38,6 +39,9 @@ public class UserService {
     @Transactional
     public void create(User user){
         user.setPassword(PasswordHash.hashPassword(user.getPassword().toCharArray()));
+        if (userRepository.find(user.getId()).isPresent()) {
+            throw new BadRequestException("User already exists.");
+        }
         userRepository.create(user);
     }
 
