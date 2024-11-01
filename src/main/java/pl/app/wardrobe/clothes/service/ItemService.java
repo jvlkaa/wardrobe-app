@@ -2,16 +2,14 @@ package pl.app.wardrobe.clothes.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import lombok.NoArgsConstructor;
-import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
 import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.repository.api.UserRepository;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,9 +30,17 @@ public class ItemService {
     }
 
     /* CRUD order */
-    public void create(Item item){
+    @Transactional
+    public void create(Item item) {
+        if (itemRepository.find(item.getId()).isPresent()) {
+            throw new BadRequestException("Item already exists.");
+        }
+        if (clothesRepository.find(item.getClothesCategory().getId()).isEmpty()) {
+            throw new BadRequestException("Clothes does not exists.");
+        }
         itemRepository.create(item);
     }
+
 
     public List<Item> findItems(){
         return itemRepository.findAll();
@@ -61,11 +67,12 @@ public class ItemService {
         return itemRepository.findByIdFromUser(user, id);
     }
 
+    @Transactional
     public void update(Item item){
         itemRepository.update(item);
     }
 
-
+    @Transactional
     public void delete(UUID id){
         itemRepository.delete(itemRepository.find(id).orElseThrow());
     }

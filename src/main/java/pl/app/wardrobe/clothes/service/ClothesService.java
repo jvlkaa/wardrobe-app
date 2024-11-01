@@ -2,6 +2,8 @@ package pl.app.wardrobe.clothes.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import lombok.NoArgsConstructor;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
@@ -21,7 +23,11 @@ public class ClothesService {
     }
 
     /* CRUD order */
+    @Transactional
     public void create(Clothes clothes){
+        if (clothesRepository.find(clothes.getId()).isPresent()) {
+            throw new BadRequestException("Clothes already exists.");
+        }
         clothesRepository.create(clothes);
     }
 
@@ -33,10 +39,12 @@ public class ClothesService {
         return clothesRepository.find(id);
     }
 
+    @Transactional
     public void update(Clothes clothes){
          clothesRepository.update(clothes);
     }
 
+    @Transactional
     public void delete(UUID id){
         clothesRepository.delete(clothesRepository.find(id).orElseThrow());
     }

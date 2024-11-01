@@ -1,12 +1,14 @@
 package pl.app.wardrobe.clothes.controller.rest;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import lombok.extern.java.Log;
 import pl.app.wardrobe.clothes.controller.api.ClothesController;
 import pl.app.wardrobe.clothes.dto.GetClothesListResponse;
 import pl.app.wardrobe.clothes.dto.GetClothesResponse;
@@ -16,8 +18,10 @@ import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
 import jakarta.ws.rs.NotFoundException;
 import java.util.UUID;
+import java.util.logging.Level;
 
 @Path("/clothes")
+@Log
 public class ClothesRestController implements ClothesController {
     private final ClothesService clothesService;
     private final DtoFunctionFactory factory;
@@ -48,8 +52,9 @@ public class ClothesRestController implements ClothesController {
             throw new WebApplicationException(Response.Status.CREATED);
 
         }
-        catch (IllegalArgumentException e){
-            throw new BadRequestException(e);
+        catch (BadRequestException e) {
+            log.log(Level.WARNING, e.getMessage(), e);
+            throw e;
         }
     }
 

@@ -3,8 +3,9 @@ package pl.app.wardrobe.user.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
-import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.crypto.PasswordHash;
 import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.repository.api.UserRepository;
@@ -34,6 +35,7 @@ public class UserService {
     }
 
     /* CRUD order */
+    @Transactional
     public void create(User user){
         user.setPassword(PasswordHash.hashPassword(user.getPassword().toCharArray()));
         userRepository.create(user);
@@ -61,10 +63,12 @@ public class UserService {
                 .orElse(false);
     }
 
+    @Transactional
     public void update(User user){
         userRepository.update(user);
     }
 
+    @Transactional
     public void delete(UUID id){
         userRepository.delete(userRepository.find(id).orElseThrow());
     }
@@ -86,6 +90,7 @@ public class UserService {
         }).orElseThrow(() -> new NotFoundException("User does not exist"));
     }
 
+    @Transactional
     public void updateAvatar(UUID id, InputStream iStream){
         userRepository.find(id).ifPresent(user ->{
             try {
@@ -105,6 +110,7 @@ public class UserService {
         });
     }
 
+    @Transactional
     public void putAvatar(UUID id, InputStream iStream){
         userRepository.find(id).ifPresent(user ->{
             try {
@@ -124,6 +130,7 @@ public class UserService {
         });
     }
 
+    @Transactional
     public void deleteAvatar(UUID id){
         userRepository.find(id).ifPresent(user ->{
             String path = this.avatarPath + File.separator + user.getAvatar();
