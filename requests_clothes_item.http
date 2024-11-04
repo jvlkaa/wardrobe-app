@@ -60,6 +60,11 @@ GET http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e87
 GET http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1/items
 ###
 
+
+# get item list (shirt) from deleted category
+GET http://localhost:9080/wardrobe-app/main/clothes/dc41721a-8f41-4a63-a7e1-bb5e54f54f8e/items
+###
+
 # delete item (pink dress); again to try delete no existing clothes
 DELETE http://localhost:9080/wardrobe-app/main/clothes/af9d2f8c-3d28-4a0a-82e4-2292f1a9b15f/items/f8eec186-c7e5-4a2c-81ee-9a1af12c5472
 ###
