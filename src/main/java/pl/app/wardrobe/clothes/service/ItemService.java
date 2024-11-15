@@ -39,6 +39,9 @@ public class ItemService {
             throw new BadRequestException("Clothes does not exists.");
         }
         itemRepository.create(item);
+        //update clothes because of cache
+        clothesRepository.find(item.getClothesCategory().getId())
+                .ifPresent(clothes -> clothes.getItems().add(item));
     }
 
 
@@ -74,6 +77,10 @@ public class ItemService {
 
     @Transactional
     public void delete(UUID id){
+        //clothes (cache)
+        itemRepository.find(id).ifPresent(item -> clothesRepository.find(item.getClothesCategory().getId()).
+                ifPresent(clothes -> clothes.getItems().remove(item)));
+        //item
         itemRepository.delete(itemRepository.find(id).orElseThrow());
     }
 }

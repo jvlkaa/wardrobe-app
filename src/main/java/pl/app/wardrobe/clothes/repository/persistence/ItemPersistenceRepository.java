@@ -7,6 +7,7 @@ import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
 import jakarta.persistence.NoResultException;
 import pl.app.wardrobe.user.entity.User;
+import pl.app.wardrobe.clothes.entity.Clothes;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,10 +40,7 @@ public class ItemPersistenceRepository implements ItemRepository {
 
     @Override
     public List<Item> findByCategory(UUID category) {
-        return manager.createQuery("select i from Item i where i.clothesCategory.id = :category", Item.class)
-                .setParameter("category", category)
-                .getResultList();
-
+        return manager.find(Clothes.class, category).getItems();
     }
 
     @Override
