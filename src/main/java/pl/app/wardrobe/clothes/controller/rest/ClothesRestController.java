@@ -1,4 +1,6 @@
 package pl.app.wardrobe.clothes.controller.rest;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.BadRequestException;
@@ -22,7 +24,7 @@ import java.util.logging.Level;
 @Path("/clothes")
 @Log
 public class ClothesRestController implements ClothesController {
-    private final ClothesService clothesService;
+    private ClothesService clothesService;
     private final DtoFunctionFactory factory;
     private final UriInfo uriInfo;
     private HttpServletResponse response;
@@ -33,11 +35,15 @@ public class ClothesRestController implements ClothesController {
     }
 
     @Inject
-    public ClothesRestController(ClothesService clothesService, DtoFunctionFactory dtoFunctionFactory,
+    public ClothesRestController(DtoFunctionFactory dtoFunctionFactory,
                                  @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
-        this.clothesService = clothesService;
         this.factory = dtoFunctionFactory;
         this.uriInfo = uriInfo;
+    }
+
+    @EJB
+    public void setClothesService(ClothesService clothesService) {
+        this.clothesService = clothesService;
     }
 
     @Override
@@ -50,12 +56,15 @@ public class ClothesRestController implements ClothesController {
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
 
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof BadRequestException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
-        catch (BadRequestException e) {
-            log.log(Level.WARNING, e.getMessage(), e);
-            throw e;
-        }
-    }
+
+}
 
     @Override
     public GetClothesListResponse getClothesList() {

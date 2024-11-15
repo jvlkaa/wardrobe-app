@@ -1,5 +1,7 @@
 package pl.app.wardrobe.user.controller.rest;
 
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.BadRequestException;
@@ -9,7 +11,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.extern.java.Log;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
@@ -28,8 +29,8 @@ import java.util.logging.Level;
 @Path("/users")
 @Log
 public class UserRestControllerI implements UserController {
-    private final UserService userService;
-    private final ItemService itemService;
+    private  UserService userService;
+    private  ItemService itemService;
     private final DtoFunctionFactory factory;
     private final UriInfo uriInfo;
     private HttpServletResponse response;
@@ -40,13 +41,22 @@ public class UserRestControllerI implements UserController {
     }
 
     @Inject
-    public UserRestControllerI(UserService userService, ItemService itemService, DtoFunctionFactory factory,
+    public UserRestControllerI(DtoFunctionFactory factory,
                                @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
-        this.userService = userService;
-        this.itemService = itemService;
         this.factory = factory;
         this.uriInfo = uriInfo;
     }
+
+    @EJB
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @EJB
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
 
     @Override
     public void putUser(UUID id, PutUserRequest request) {
@@ -58,10 +68,12 @@ public class UserRestControllerI implements UserController {
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
 
-        }
-        catch (BadRequestException e) {
-            log.log(Level.WARNING, e.getMessage(), e);
-            throw e;
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof BadRequestException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
     }
 

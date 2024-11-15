@@ -1,5 +1,6 @@
 package pl.app.wardrobe.clothes.view;
 
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -26,8 +27,8 @@ import java.util.UUID;
 @ViewScoped
 @Named
 public class ClothesView implements Serializable {
-    private final ClothesService clothesService;
-    private final ItemService itemService;
+    private ClothesService clothesService;
+    private ItemService itemService;
     private final ModelFunctionFactory factory;
 
     @Setter
@@ -41,12 +42,19 @@ public class ClothesView implements Serializable {
 
 
     @Inject
-    public ClothesView( ClothesService clothesService, ItemService itemService, ModelFunctionFactory factory) {
-        this.clothesService = clothesService;
-        this.itemService = itemService;
+    public ClothesView(ModelFunctionFactory factory) {
         this.factory = factory;
     }
 
+    @EJB
+    public void setClothesService(ClothesService clothesService) {
+        this.clothesService = clothesService;
+    }
+
+    @EJB
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     public void init() throws IOException {
         Optional<Clothes> clothes = clothesService.findClothesById(id);

@@ -1,9 +1,9 @@
 package pl.app.wardrobe.user.service;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class UserService {
     private final UserRepository userRepository;
@@ -29,14 +30,13 @@ public class UserService {
     private final String avatarPath;
 
     @Inject
-    public UserService(UserRepository userRepository, PasswordHash passwordHash, ServletContext servletContext){
+    public UserService(UserRepository userRepository, PasswordHash passwordHash){
         this.userRepository = userRepository;
         this.passwordHash = passwordHash;
-        this.avatarPath = servletContext.getInitParameter("avatarsPath");
+        this.avatarPath = "../../../../../../src/avatars";
     }
 
     /* CRUD order */
-    @Transactional
     public void create(User user){
         user.setPassword(PasswordHash.hashPassword(user.getPassword().toCharArray()));
         if (userRepository.find(user.getId()).isPresent()) {
@@ -67,12 +67,10 @@ public class UserService {
                 .orElse(false);
     }
 
-    @Transactional
     public void update(User user){
         userRepository.update(user);
     }
 
-    @Transactional
     public void delete(UUID id){
         userRepository.delete(userRepository.find(id).orElseThrow());
     }
@@ -94,7 +92,6 @@ public class UserService {
         }).orElseThrow(() -> new NotFoundException("User does not exist"));
     }
 
-    @Transactional
     public void updateAvatar(UUID id, InputStream iStream){
         userRepository.find(id).ifPresent(user ->{
             try {
@@ -114,7 +111,6 @@ public class UserService {
         });
     }
 
-    @Transactional
     public void putAvatar(UUID id, InputStream iStream){
         userRepository.find(id).ifPresent(user ->{
             try {
@@ -134,7 +130,6 @@ public class UserService {
         });
     }
 
-    @Transactional
     public void deleteAvatar(UUID id){
         userRepository.find(id).ifPresent(user ->{
             String path = this.avatarPath + File.separator + user.getAvatar();

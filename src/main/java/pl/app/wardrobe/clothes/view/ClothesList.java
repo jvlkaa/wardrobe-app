@@ -1,14 +1,14 @@
 package pl.app.wardrobe.clothes.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.ws.rs.NotFoundException;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.model.ClothesListModel;
-import pl.app.wardrobe.clothes.model.ItemListModel;
 import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
-import pl.app.wardrobe.controller.servlet.exception.NotFoundException;
 import pl.app.wardrobe.factory.ModelFunctionFactory;
 
 import java.util.List;
@@ -16,19 +16,26 @@ import java.util.List;
 @RequestScoped
 @Named
 public class ClothesList {
-    private final ClothesService clothesService;
-    private final ItemService itemService;
+    private ClothesService clothesService;
+    private ItemService itemService;
     private ClothesListModel clothes_list;
 
     private final ModelFunctionFactory factory;
 
     @Inject
-    public ClothesList(ClothesService clothesService,  ItemService itemService, ModelFunctionFactory factory) {
-        this.clothesService = clothesService;
-        this.itemService = itemService;
+    public ClothesList(ModelFunctionFactory factory) {
         this.factory = factory;
     }
 
+    @EJB
+    public void setClothesService(ClothesService clothesService) {
+        this.clothesService = clothesService;
+    }
+
+    @EJB
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     public ClothesListModel getClothes_list() {
         if (clothes_list == null) {

@@ -1,6 +1,6 @@
 package pl.app.wardrobe.clothes.repository.persistence;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.app.wardrobe.clothes.entity.Item;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-@RequestScoped
+@Dependent
 public class ItemPersistenceRepository implements ItemRepository {
 
     private EntityManager manager;

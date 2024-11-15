@@ -60,7 +60,6 @@ GET http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e87
 GET http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1/items
 ###
 
-
 # get item list (shirt) from deleted category
 GET http://localhost:9080/wardrobe-app/main/clothes/dc41721a-8f41-4a63-a7e1-bb5e54f54f8e/items
 ###
@@ -102,7 +101,7 @@ Content-Type: application/json
 
 #---------test---------
 # put clothes; again to try put clothes with the same id
-PUT http://localhost:9080/wardrobe-app/main/clothes/e7fc646e-c213-440a-b62d-3724db73869b
+PUT http://localhost:9080/wardrobe-app/main/clothes/a7fc546e-c213-440a-b62d-3724db73869b
 Content-Type: application/json
 
 {
@@ -112,7 +111,7 @@ Content-Type: application/json
 ###
 
 # put item;
-PUT http://localhost:9080/wardrobe-app/main/clothes/e7fc646e-c213-440a-b62d-3724db73869b/items/b7fc646e-c213-440a-b62d-3724db73869b
+PUT http://localhost:9080/wardrobe-app/main/clothes/a7fc546e-c213-440a-b62d-3724db73869b/items/c7fc646e-c213-440a-b62d-3724db73869b
 Content-Type: application/json
 
 {
@@ -124,9 +123,9 @@ Content-Type: application/json
 ###
 
 # get clothes list (hat)
-GET http://localhost:9080/wardrobe-app/main/clothes/e7fc646e-c213-440a-b62d-3724db73869b/items
+GET http://localhost:9080/wardrobe-app/main/clothes/a7fc546e-c213-440a-b62d-3724db73869b/items
 ###
 
 # delete item (hat);
-DELETE http://localhost:9080/wardrobe-app/main/clothes/e7fc646e-c213-440a-b62d-3724db73869b/items/b7fc646e-c213-440a-b62d-3724db73869b
+DELETE http://localhost:9080/wardrobe-app/main/clothes/a7fc546e-c213-440a-b62d-3724db73869b/items/c7fc646e-c213-440a-b62d-3724db73869b
 ###

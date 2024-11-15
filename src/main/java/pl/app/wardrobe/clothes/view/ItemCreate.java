@@ -1,11 +1,14 @@
 package pl.app.wardrobe.clothes.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.Conversation;
 import jakarta.enterprise.context.ConversationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
+import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Size;
 import pl.app.wardrobe.clothes.model.ClothesShortModel;
 import pl.app.wardrobe.clothes.model.ItemCreateModel;
@@ -21,11 +24,12 @@ import java.util.stream.Collectors;
 
 @ConversationScoped
 @Named
+@Log
 @NoArgsConstructor(force = true)
 public class ItemCreate implements Serializable {
 
-    private final ItemService itemService;
-    private final ClothesService clothesService;
+    private ItemService itemService;
+    private ClothesService clothesService;
     private final ModelFunctionFactory factory;
 
     @Getter
@@ -37,16 +41,23 @@ public class ItemCreate implements Serializable {
 
     @Inject
     public ItemCreate(
-            ItemService itemService,
-            ClothesService clothesService,
             ModelFunctionFactory factory,
             Conversation conversation
     ) {
-        this.itemService = itemService;
         this.factory = factory;
-        this.clothesService = clothesService;
         this.conversation = conversation;
     }
+
+    @EJB
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    @EJB
+    public void setClothesService(ClothesService clothesService) {
+        this.clothesService = clothesService;
+    }
+
 
     public void init() {
         if (conversation.isTransient()) {

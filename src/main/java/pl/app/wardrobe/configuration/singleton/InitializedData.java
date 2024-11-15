@@ -1,13 +1,7 @@
-package pl.app.wardrobe.configuration.observer;
+package pl.app.wardrobe.configuration.singleton;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Initialized;
-import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.*;
 import lombok.SneakyThrows;
 import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
@@ -18,42 +12,40 @@ import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.user.entity.Role;
 import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.service.UserService;
-
-import java.io.InputStream;
+import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 /* order configuration in web.xml*/
-@ApplicationScoped
-public class InitializedData implements ServletContextListener {
-    private final  ItemService itemService;
-    private final  ClothesService clothesService;
-    private final  UserService userService;
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
+@NoArgsConstructor
+public class InitializedData {
+    private ItemService itemService;
+    private ClothesService clothesService;
+    private UserService userService;
 
-    private final RequestContextController requestContextController;
-
-    @Inject
-    public InitializedData(
-            ItemService itemService,
-            UserService userService,
-            ClothesService clothesService,
-            RequestContextController requestContextController
-    ) {
+    @EJB
+    public void setItemService(ItemService itemService) {
         this.itemService = itemService;
-        this.userService = userService;
+    }
+
+    @EJB
+    public void setClothesService(ClothesService clothesService) {
         this.clothesService = clothesService;
-        this.requestContextController = requestContextController;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
+    @EJB
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
 
+    @PostConstruct
     @SneakyThrows
     private void init() {
-        requestContextController.activate();
         if (userService.findUserByLogin("admin").isEmpty()) {
             /* USERS */
             User admin = User.builder()
@@ -231,6 +223,5 @@ public class InitializedData implements ServletContextListener {
             itemService.create(item7);
             itemService.create(item8);
         }
-        requestContextController.deactivate();
     }
 }

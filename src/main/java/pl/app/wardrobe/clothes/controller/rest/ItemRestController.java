@@ -1,5 +1,6 @@
 package pl.app.wardrobe.clothes.controller.rest;
 
+import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.Path;
@@ -13,20 +14,23 @@ import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
+import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
+import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
 import java.util.logging.Level;
 import java.util.List;
 import java.util.UUID;
-import jakarta.transaction.TransactionalException;
+import jakarta.ejb.EJBException;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 @Path("/clothes/{clothesId}/items")
 @Log
 public class ItemRestController implements ItemController {
-    private final ItemService itemService;
+    private ItemService itemService;
+    private ClothesService clothesService;
     private final DtoFunctionFactory factory;
     private final UriInfo uriInfo;
     private HttpServletResponse response;
@@ -37,12 +41,22 @@ public class ItemRestController implements ItemController {
     }
 
     @Inject
-    public ItemRestController(ItemService itemService, DtoFunctionFactory factory,
+    public ItemRestController(DtoFunctionFactory factory,
                               @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo){
-        this.itemService = itemService;
         this.factory = factory;
         this.uriInfo = uriInfo;
     }
+
+    @EJB
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
+    @EJB
+    public void setClothesService(ClothesService clothesService) {
+        this.clothesService = clothesService;
+    }
+
 
     @Override
     public void putItem(UUID clothesId, UUID id, PutItemRequest request){
@@ -55,9 +69,13 @@ public class ItemRestController implements ItemController {
             throw new WebApplicationException(Response.Status.CREATED);
 
         }
-        catch (BadRequestException e) {
-            log.log(Level.WARNING, e.getMessage(), e);
-            throw e;
+        catch (EJBException  ex) {
+            if (ex.getCause() instanceof BadRequestException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
+
         }
     }
 
@@ -69,9 +87,13 @@ public class ItemRestController implements ItemController {
 
     @Override
     public GetItemListResponse getItemListFromClothes(UUID id) {
+        if (clothesService.findClothesById(id).isEmpty()) {
+            throw new NotFoundException();
+        }
+
         List<Item> items = itemService.findItemsByClothes(id);
         if (items.isEmpty()) {
-            throw new BadRequestException();
+            throw new NotFoundException();
         }
         return factory.itemListToResponse().apply(items);
     }
