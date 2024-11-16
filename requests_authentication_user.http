@@ -1,0 +1,93 @@
+# -----------------ADMIN----------------- #
+
+# get single user
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# get user list
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/users
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# delete user again to try delete no existing user
+// @no-cookie-jar
+DELETE http://localhost:9080/wardrobe-app/main/users/d6a72d4b-0f98-47e5-8e3b-2f37904a6f7b
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# put user; again to try put user with the same id
+// @no-cookie-jar
+PUT http://localhost:9080/wardrobe-app/main/users/e7fc646e-c213-440a-b62d-3724db73869b
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "login": "julia",
+  "email": "julia@example.com",
+  "dateOfBirth": "2002-07-16",
+  "password": "password123"
+}
+
+
+###
+# update user
+// @no-cookie-jar
+PATCH  http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "dateOfBirth": "2002-07-15",
+  "email": "julia2002@example.com"
+}
+###
+
+
+# ----------------- USER ----------------- #
+# get single user
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383
+Authorization: Basic am9oblNtaXRoOmpvaG4xMjM=
+###
+
+# get user list
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/users
+Authorization: Basic am9oblNtaXRoOmpvaG4xMjM=
+###
+
+# delete user again to try delete no existing user
+// @no-cookie-jar
+DELETE http://localhost:9080/wardrobe-app/main/users/d6a72d4b-0f98-47e5-8e3b-2f37904a6f7b
+Authorization: Basic am9oblNtaXRoOmpvaG4xMjM=
+###
+
+# put user; again to try put user with the same id
+// @no-cookie-jar
+PUT http://localhost:9080/wardrobe-app/main/users/d7fc246e-c213-440a-a62d-3724db73865c
+Authorization: Basic am9oblNtaXRoOmpvaG4xMjM=
+Content-Type: application/json
+
+{
+  "login": "julia2",
+  "email": "julia2@example.com",
+  "dateOfBirth": "2002-07-16",
+  "password": "password123"
+}
+
+
+###
+# update user
+// @no-cookie-jar
+PATCH  http://localhost:9080/wardrobe-app/main/users/3ed970bd-e79b-448c-936a-821a58eef383
+Authorization: Basic am9oblNtaXRoOmpvaG4xMjM=
+Content-Type: application/json
+
+{
+  "dateOfBirth": "2002-07-15",
+  "email": "julia2002@example.com"
+}
+###

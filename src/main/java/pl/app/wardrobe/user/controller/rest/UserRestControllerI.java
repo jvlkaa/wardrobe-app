@@ -1,5 +1,7 @@
 package pl.app.wardrobe.user.controller.rest;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
@@ -19,6 +21,7 @@ import pl.app.wardrobe.user.dto.GetUserResponse;
 import pl.app.wardrobe.user.dto.GetUsersResponse;
 import pl.app.wardrobe.user.dto.PatchUserRequest;
 import pl.app.wardrobe.user.dto.PutUserRequest;
+import pl.app.wardrobe.user.entity.Role;
 import pl.app.wardrobe.user.service.UserService;
 
 import java.io.ByteArrayInputStream;
@@ -28,6 +31,7 @@ import java.util.logging.Level;
 
 @Path("/users")
 @Log
+@RolesAllowed(Role.USER)
 public class UserRestControllerI implements UserController {
     private  UserService userService;
     private  ItemService itemService;
@@ -59,6 +63,7 @@ public class UserRestControllerI implements UserController {
 
 
     @Override
+    @PermitAll
     public void putUser(UUID id, PutUserRequest request) {
         try{
             userService.create(factory.requestToUser().apply(id, request));
@@ -69,7 +74,7 @@ public class UserRestControllerI implements UserController {
             throw new WebApplicationException(Response.Status.CREATED);
 
         } catch (EJBException ex) {
-            if (ex.getCause() instanceof BadRequestException) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
                 log.log(Level.WARNING, ex.getMessage(), ex);
                 throw new BadRequestException(ex);
             }
@@ -78,11 +83,13 @@ public class UserRestControllerI implements UserController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public GetUsersResponse getUserList() {
         return factory.usersToResponse().apply(userService.findUserList());
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public GetUserResponse getUser(UUID id) {
         return userService.findUserById(id)
                 .map(factory.userToResponse())
@@ -90,6 +97,7 @@ public class UserRestControllerI implements UserController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void patchUser(UUID id, PatchUserRequest request) {
         userService.findUserById(id).ifPresentOrElse(
                 entity -> userService.update(factory.updateUserWithRequest().apply(entity, request)),
@@ -100,6 +108,7 @@ public class UserRestControllerI implements UserController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void deleteUser(UUID id) {
         userService.findUserById(id).ifPresentOrElse(
                 entity -> {
@@ -119,6 +128,7 @@ public class UserRestControllerI implements UserController {
 
     /* avatars */
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void putUserAvatar(UUID id, InputStream photo) {
         userService.findUserById(id).ifPresentOrElse(
                 entity -> {
@@ -134,6 +144,8 @@ public class UserRestControllerI implements UserController {
         );
     }
 
+    @Override
+    @RolesAllowed(Role.ADMIN)
     public Response getUserAvatar(UUID id) {
         byte[] avatarBytes = userService.findUserById(id)
                 .map(user -> userService.getAvatar(id))
@@ -145,6 +157,7 @@ public class UserRestControllerI implements UserController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void patchUserAvatar(UUID id, InputStream photo) {
         userService.findUserById(id).ifPresentOrElse(
                 entity -> {
@@ -161,6 +174,7 @@ public class UserRestControllerI implements UserController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void deleteUserAvatar(UUID id) {
         userService.findUserById(id).ifPresentOrElse(
                 entity -> userService.deleteAvatar(id),

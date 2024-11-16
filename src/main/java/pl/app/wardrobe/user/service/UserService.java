@@ -3,11 +3,8 @@ package pl.app.wardrobe.user.service;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.servlet.ServletContext;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
-import pl.app.wardrobe.crypto.PasswordHash;
 import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.repository.api.UserRepository;
 import java.io.*;
@@ -18,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
 @LocalBean
 @Stateless
@@ -25,23 +23,23 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
 
-    private final PasswordHash passwordHash;
+    private final Pbkdf2PasswordHash passwordHash;
 
     private final String avatarPath;
 
     @Inject
-    public UserService(UserRepository userRepository, PasswordHash passwordHash){
+    public UserService(UserRepository userRepository, @SuppressWarnings("CdiInjectionPointsInspection") Pbkdf2PasswordHash passwordHash){
         this.userRepository = userRepository;
         this.passwordHash = passwordHash;
         this.avatarPath = "../../../../../../src/avatars";
     }
 
     /* CRUD order */
-    public void create(User user){
-        user.setPassword(PasswordHash.hashPassword(user.getPassword().toCharArray()));
-        if (userRepository.find(user.getId()).isPresent()) {
-            throw new BadRequestException("User already exists.");
+    public void create(User user) {
+        if (userRepository.find(user.getId()).isPresent() || userRepository.findByEmail(user.getEmail()).isPresent()){
+            throw new IllegalArgumentException();
         }
+        user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
         userRepository.create(user);
     }
 
@@ -52,6 +50,7 @@ public class UserService {
     public Optional<User> findUserByLogin(String login) {
         return userRepository.findByLogin(login);
     }
+
     public Optional<User> findUserByEmail(String email) {
 
         return userRepository.findByEmail(email);
@@ -63,7 +62,7 @@ public class UserService {
 
     public boolean verify(String login, String password) {
         return findUserByLogin(login)
-                .map(user -> PasswordHash.verifyPassword(password.toCharArray(), user.getPassword()))
+                .map(user -> passwordHash.verify(password.toCharArray(), user.getPassword()))
                 .orElse(false);
     }
 

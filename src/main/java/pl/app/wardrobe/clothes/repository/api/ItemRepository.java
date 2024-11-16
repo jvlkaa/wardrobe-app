@@ -12,5 +12,5 @@ public interface ItemRepository extends Repository<Item, UUID> {
     List<Item> findByCategory(UUID category);
     List<Item> findByOwner(User owner);
     Optional<Item> findByIdFromUser(User user, UUID id);
-
+    List<Item> findByCategoryAndUser(User owner, Clothes clothesCategory);
 }

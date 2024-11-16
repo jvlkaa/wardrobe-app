@@ -1,7 +1,7 @@
 package pl.app.wardrobe.user.entity;
 
 
-public enum Role {
-    USER,
-    ADMIN
+public class Role {
+    public static final String ADMIN = "admin";
+    public static final String USER = "user";
 }

@@ -1,0 +1,1 @@
+package pl.app.wardrobe.user.model.function;

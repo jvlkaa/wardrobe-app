@@ -1,6 +1,8 @@
 package pl.app.wardrobe.configuration.singleton;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
 import jakarta.ejb.*;
 import lombok.SneakyThrows;
 import pl.app.wardrobe.clothes.entity.Clothes;
@@ -16,16 +18,26 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.java.Log;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 
-/* order configuration in web.xml*/
+
 @Singleton
 @Startup
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 @NoArgsConstructor
+@DependsOn("InitializeAdminService")
+@DeclareRoles({Role.ADMIN, Role.USER})
+@RunAs(Role.ADMIN)
+@Log
 public class InitializedData {
     private ItemService itemService;
     private ClothesService clothesService;
     private UserService userService;
+
+    @Inject
+    private SecurityContext securityContext;
 
     @EJB
     public void setItemService(ItemService itemService) {
@@ -55,7 +67,7 @@ public class InitializedData {
                     .dateOfBirth(LocalDate.of(1985, 1, 10))
                     .email("admin@example.com")
                     .avatar("3ed970bd-e79b-448c-936a-821a58eef383.png")
-                    .role(Role.ADMIN)
+                    .roles(List.of(Role.ADMIN, Role.USER))
                     .build();
 
             User user1 = User.builder()
@@ -64,7 +76,7 @@ public class InitializedData {
                     .password("john123")
                     .dateOfBirth(LocalDate.of(2002, 5, 20))
                     .email("john@example.com")
-                    .role(Role.USER)
+                    .roles(List.of(Role.USER))
                     .build();
 
             User user2 = User.builder()
@@ -73,7 +85,7 @@ public class InitializedData {
                     .password("bob321")
                     .dateOfBirth(LocalDate.of(1995, 3, 15))
                     .email("jane@example.com")
-                    .role(Role.USER)
+                    .roles(List.of(Role.USER))
                     .build();
 
             User user3 = User.builder()
@@ -82,8 +94,13 @@ public class InitializedData {
                     .password("alice987")
                     .dateOfBirth(LocalDate.of(2000, 7, 25))
                     .email("alice@example.com")
-                    .role(Role.USER)
+                    .roles(List.of(Role.USER))
                     .build();
+
+            userService.create(admin);
+            userService.create(user1);
+            userService.create(user2);
+            userService.create(user3);
 
             /* CLOTHES*/
             Clothes jeans = Clothes.builder()
@@ -121,6 +138,13 @@ public class InitializedData {
                     .name("Shirt")
                     .material(List.of(Material.LINEN, Material.POLYESTER))
                     .build();
+
+            clothesService.create(jeans);
+            clothesService.create(cottonTShirt);
+            clothesService.create(leatherJacket);
+            clothesService.create(woolSweater);
+            clothesService.create(silkDress);
+            clothesService.create(linenShirt);
 
             /* ITEMS */
             Item item1 = Item.builder()
@@ -203,17 +227,6 @@ public class InitializedData {
                     .owner(admin)
                     .build();
 
-            /* CREATION */
-            userService.create(admin);
-            userService.create(user1);
-            userService.create(user2);
-            userService.create(user3);
-            clothesService.create(jeans);
-            clothesService.create(cottonTShirt);
-            clothesService.create(leatherJacket);
-            clothesService.create(woolSweater);
-            clothesService.create(silkDress);
-            clothesService.create(linenShirt);
             itemService.create(item1);
             itemService.create(item2);
             itemService.create(item3);

@@ -1,5 +1,6 @@
 package pl.app.wardrobe.clothes.model;
 import lombok.*;
+import pl.app.wardrobe.user.model.UserModel;
 
 @Getter
 @Setter
@@ -10,4 +11,5 @@ import lombok.*;
 @EqualsAndHashCode
 public class ItemEditModel {
     private String name;
+    private UserModel owner;
 }

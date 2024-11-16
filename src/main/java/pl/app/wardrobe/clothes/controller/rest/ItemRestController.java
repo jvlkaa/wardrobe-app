@@ -1,10 +1,11 @@
 package pl.app.wardrobe.clothes.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
+import jakarta.ejb.EJBAccessException;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -23,11 +24,11 @@ import java.util.logging.Level;
 import java.util.List;
 import java.util.UUID;
 import jakarta.ejb.EJBException;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
+import pl.app.wardrobe.user.entity.Role;
 
 @Path("/clothes/{clothesId}/items")
 @Log
+@RolesAllowed(Role.USER)
 public class ItemRestController implements ItemController {
     private ItemService itemService;
     private ClothesService clothesService;
@@ -61,7 +62,7 @@ public class ItemRestController implements ItemController {
     @Override
     public void putItem(UUID clothesId, UUID id, PutItemRequest request){
         try{
-            itemService.create(factory.requestToItem().apply(clothesId, id, request));
+            itemService.createForCallerPrincipal(factory.requestToItem().apply(clothesId, id, request));
             response.setHeader("Location", uriInfo.getBaseUriBuilder()
                     .path(ItemController.class, "getItem")
                     .build(id)
@@ -74,6 +75,9 @@ public class ItemRestController implements ItemController {
                 log.log(Level.WARNING, ex.getMessage(), ex);
                 throw new BadRequestException(ex);
             }
+            else if (ex.getCause() instanceof EJBAccessException) {
+            throw new ForbiddenException(ex.getMessage());
+        }
             throw ex;
 
         }
@@ -81,7 +85,7 @@ public class ItemRestController implements ItemController {
 
 //    @Override
 //    public GetItemListResponse getItemList() {
-//        return factory.itemListToResponse().apply(itemService.findItems());
+//        return factory.itemListToResponse().apply(itemService.findItemsForCallerPrincipal());
 //    }
 
 
@@ -91,7 +95,7 @@ public class ItemRestController implements ItemController {
             throw new NotFoundException();
         }
 
-        List<Item> items = itemService.findItemsByClothes(id);
+        List<Item> items = itemService.findItemsByClothesForCallerPrincipal(id);
         if (items.isEmpty()) {
             throw new NotFoundException();
         }
@@ -107,7 +111,7 @@ public class ItemRestController implements ItemController {
 
     @Override
     public GetItemResponse getItem(UUID id) {
-        return itemService.findItemById(id)
+        return itemService.findItemByIdForCallerPrincipal(id)
                 .map(factory.itemToResponse())
                 .orElseThrow(NotFoundException::new);
     }
@@ -116,7 +120,13 @@ public class ItemRestController implements ItemController {
     public void patchItem(UUID id, PatchItemRequest request) {
         itemService.findItemById(id).ifPresentOrElse(
                 entity -> {
-                    itemService.update(factory.updateItemWithRequest().apply(entity, request));
+                    try {
+                        itemService.updateForCallerPrincipal(factory.updateItemWithRequest().apply(entity, request));
+                    } catch (EJBAccessException ex) {
+                        log.log(Level.WARNING, ex.getMessage(), ex);
+                        throw new ForbiddenException(ex.getMessage());
+                    }
+
                 },
                 () -> {
                     throw new NotFoundException();
@@ -127,7 +137,14 @@ public class ItemRestController implements ItemController {
     @Override
     public void deleteItem(UUID id) {
         itemService.findItemById(id).ifPresentOrElse(
-                entity -> itemService.delete(id),
+                entity -> {
+                    try {
+                        itemService.deleteForCallerPrincipal(id);
+                    } catch (EJBAccessException ex) {
+                        log.log(Level.WARNING, ex.getMessage(), ex);
+                        throw new ForbiddenException(ex.getMessage());
+                    }
+                },
                 () -> {
                     throw new NotFoundException();
                 }

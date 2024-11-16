@@ -64,6 +64,14 @@ public class ItemPersistenceRepository implements ItemRepository {
     }
 
     @Override
+    public List<Item> findByCategoryAndUser(User owner, Clothes clothesCategory) {
+        return manager.createQuery("select i from Item i where i.owner = :owner and i.clothesCategory = :clothesCategory", Item.class)
+                .setParameter("owner", owner)
+                .setParameter("clothesCategory", clothesCategory)
+                .getResultList();
+    }
+
+    @Override
     public void update(Item entity) {
         manager.merge(entity);
     }

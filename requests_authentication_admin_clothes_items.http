@@ -1,0 +1,96 @@
+# Data:
+# Basic Auth
+# Admin:       3ed970bd-e79b-448c-936a-821a58eef383
+# login:       admin
+# password:    root
+# zakodowanie: YWRtaW46cm9vdA==
+
+
+## ------------ CLOTHES ------------ ##
+# get single clothes (jeans)
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# get clothes list
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/clothes
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# delete clothes (shirt); again to try delete no existing clothes
+// @no-cookie-jar
+DELETE http://localhost:9080/wardrobe-app/main/clothes/dc41721a-8f41-4a63-a7e1-bb5e54f54f8e
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# put clothes; again to try put clothes with the same id
+// @no-cookie-jar
+PUT http://localhost:9080/wardrobe-app/main/clothes/e7fc646e-c213-440a-b62d-3724db73869b
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "name": "hat",
+  "material": ["COTTON"]
+}
+
+###
+# update clothes
+// @no-cookie-jar
+PATCH  http://localhost:9080/wardrobe-app/main/clothes/6f14bc1d-2a49-4f70-87ae-923b4bbd572e
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "name": "shirt",
+  "material": ["COTTON", "POLYESTER"]
+}
+###
+
+
+## ----------- ITEM ----------- ##
+# get single item (motorcycle jacket )
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/clothes/4d7f9b4a-584a-4d9a-8f10-3b8b2b6d3b92/items/f5d79444-9b0a-4bde-b6a8-6355075d4c6a
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# get item list (jeans)  should display 1 for user, 2 for admin
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1/items
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# delete item (pink dress); again to try delete no existing clothes
+// @no-cookie-jar
+DELETE http://localhost:9080/wardrobe-app/main/clothes/af9d2f8c-3d28-4a0a-82e4-2292f1a9b15f/items/f8eec186-c7e5-4a2c-81ee-9a1af12c5472
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# put item; again to try put item with the same id
+// @no-cookie-jar
+PUT http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1/items/b7fc646e-c213-440a-b62d-3724db73869b
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "name": "black elegant jeans",
+  "size": "S",
+  "color": "black",
+  "purchaseDate": "2024-10-12"
+}
+
+###
+
+# update user item
+// @no-cookie-jar
+PATCH  http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1/items/1b56d72e-c60f-4e6c-b74a-bd9b531b4be1
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "name": "low waisted jeans"
+}
+###

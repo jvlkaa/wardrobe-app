@@ -1,4 +1,5 @@
 package pl.app.wardrobe.clothes.controller.rest;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
@@ -18,6 +19,8 @@ import pl.app.wardrobe.clothes.dto.PutClothesRequest;
 import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.factory.DtoFunctionFactory;
 import jakarta.ws.rs.NotFoundException;
+import pl.app.wardrobe.user.entity.Role;
+
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -47,6 +50,7 @@ public class ClothesRestController implements ClothesController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void putClothes(UUID id, PutClothesRequest request) {
         try{
             clothesService.create(factory.requestToClothes().apply(id, request));
@@ -64,14 +68,16 @@ public class ClothesRestController implements ClothesController {
             throw ex;
         }
 
-}
+    }
 
     @Override
+    @RolesAllowed(Role.USER)
     public GetClothesListResponse getClothesList() {
         return factory.clothesListToResponse().apply(clothesService.findClothesList());
     }
 
     @Override
+    @RolesAllowed(Role.USER)
     public GetClothesResponse getClothes(UUID id) {
         return clothesService.findClothesById(id)
                 .map(factory.clothesToResponse())
@@ -79,6 +85,7 @@ public class ClothesRestController implements ClothesController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void patchClothes(UUID id, PatchClothesRequest request) {
         clothesService.findClothesById(id).ifPresentOrElse(
                 entity -> clothesService.update(factory.updateClothesWithRequest().apply(entity, request)),
@@ -89,6 +96,7 @@ public class ClothesRestController implements ClothesController {
     }
 
     @Override
+    @RolesAllowed(Role.ADMIN)
     public void deleteClothes(UUID id) {
         clothesService.findClothesById(id).ifPresentOrElse(
                 entity -> clothesService.delete(id),

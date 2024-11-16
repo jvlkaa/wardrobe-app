@@ -15,6 +15,7 @@ public class UpdateItemWithRequestFunction implements BiFunction<Item, PatchItem
                 .color(entity.getColor())
                 .purchaseDate(entity.getPurchaseDate())
                 .clothesCategory(entity.getClothesCategory())
+                .owner(entity.getOwner())
                 .build();
     }
 }

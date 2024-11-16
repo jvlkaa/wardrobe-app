@@ -67,7 +67,7 @@ public class ClothesView implements Serializable {
 
     public ItemListModel getClothes_item_list() {
         if (clothes_item_list == null) {
-            clothes_item_list = factory.itemListToModel().apply(itemService.findItemsByClothes(clothes.getId()));
+            clothes_item_list = factory.itemListToModel().apply(itemService.findItemsByClothesForCallerPrincipal(clothes.getId()));
         }
         return clothes_item_list;
     }

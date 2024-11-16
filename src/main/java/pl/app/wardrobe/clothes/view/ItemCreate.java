@@ -86,7 +86,7 @@ public class ItemCreate implements Serializable {
     }
 
     public String saveAction() {
-        itemService.create(factory.modelToItem().apply(item));
+        itemService.createForCallerPrincipal(factory.modelToItem().apply(item));
         conversation.end();
         return "/item/item_list.xhtml?faces-redirect=true";
     }

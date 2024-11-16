@@ -32,7 +32,7 @@ public class ItemList {
 
     public ItemListModel getItem_list() {
         if (item_list == null) {
-            item_list = factory.itemListToModel().apply(itemService.findItems());
+            item_list = factory.itemListToModel().apply(itemService.findItemsForCallerPrincipal());
         }
         return item_list;
     }
