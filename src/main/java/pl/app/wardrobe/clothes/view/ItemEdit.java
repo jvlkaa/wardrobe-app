@@ -27,6 +27,8 @@ public class ItemEdit implements Serializable {
 
     private final ModelFunctionFactory factory;
 
+    private final FacesContext facesContext;
+
     @Setter
     @Getter
     private UUID id;
@@ -35,8 +37,9 @@ public class ItemEdit implements Serializable {
     private ItemEditModel item;
 
     @Inject
-    public ItemEdit(ModelFunctionFactory factory) {
+    public ItemEdit(ModelFunctionFactory factory, FacesContext facesContext) {
         this.factory = factory;
+        this.facesContext = facesContext;
     }
 
     @EJB
@@ -45,16 +48,16 @@ public class ItemEdit implements Serializable {
     }
 
     public void init() throws IOException {
-        Optional<Item> item = itemService.findItemById(id);
+        Optional<Item> item = itemService.findItemByIdForCallerPrincipal(id);
         if (item.isPresent()) {
             this.item = factory.itemToEditModel().apply(item.get());
         } else {
-            FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
+            facesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_NOT_FOUND, "Item not found");
         }
     }
 
     public String saveAction() {
-        itemService.update(factory.updateItem().apply(itemService.findItemById(id).orElseThrow(), item));
+        itemService.updateForCallerPrincipal(factory.updateItem().apply(itemService.findItemById(id).orElseThrow(), item));
         return "/item/item_list.xhtml?faces-redirect=true&includeViewParams=true";
     }
 

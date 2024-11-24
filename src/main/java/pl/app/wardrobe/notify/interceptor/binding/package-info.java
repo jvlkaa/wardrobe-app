@@ -1,0 +1,1 @@
+package pl.app.wardrobe.notify.interceptor.binding;

@@ -72,8 +72,8 @@ public class ClothesView implements Serializable {
         return clothes_item_list;
     }
 
-    public String deleteAction(ItemListModel.Item item) {
-        itemService.delete(item.getId());
-        return "clothes_view?faces-redirect=true&id=" + id;
+    public void deleteAction(ItemListModel.Item item) {
+        itemService.deleteForCallerPrincipal(item.getId());
+        clothes_item_list = null;
     }
 }

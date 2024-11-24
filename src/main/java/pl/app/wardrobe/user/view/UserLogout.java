@@ -23,6 +23,5 @@ public class UserLogout {
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
-
 }
 

@@ -11,7 +11,7 @@
         <meta name="description" content="wardrobe application"/>
         <meta name="keywords" content="wardrobe"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>Wardrobe app</title>
+        <title>#{messages['mainTitle']}</title>
 
         <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
         <h:outputStylesheet library="default" name="css/main.css"/>
@@ -20,14 +20,15 @@
     </h:head>
 
     <h:body>
+
         <div class="container">
             <header class="mb-4 mt-4">
-                <h:graphicImage name="default/css/logo.png" alt="Wardrobe Logo" class="img-fluid" />
-                <h1> Wardrobe </h1>
+                <h:graphicImage name="#{messages['imgSource']}" alt="Wardrobe Logo" class="img-fluid" />
+                <h1> #{messages['mainTitle']} </h1>
                 <h:form styleClass="container d-flex  align-items-center justify-content-end"
                         rendered="#{facesContext.externalContext.userPrincipal != null}">
-                    Logged: <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
-                    <h:commandButton styleClass="btn btn-link" value="Logout"
+                    #{messages.logged}: <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
+                    <h:commandButton styleClass="btn btn-link" value="#{messages.logout}"
                                      action="#{userLogout.logoutAction()}"/>
                 </h:form>
             </header>
@@ -36,23 +37,16 @@
                 <div class="container-fluid">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <h:link styleClass="nav-link" outcome="/index.xhtml">Home</h:link>
+                            <h:link styleClass="nav-link" outcome="/index.xhtml">#{messages['nav.home']}</h:link>
                         </li>
                         <li class="nav-item">
                             <h:link styleClass="nav-link"
-                                    outcome="/clothes/clothes_list.xhtml"> Categories </h:link>
+                                    outcome="/clothes/clothes_list.xhtml">#{messages['nav.clothes']} </h:link>
                         </li>
                         <li class="nav-item">
                             <h:link styleClass="nav-link"
-                                    outcome="/item/item_list.xhtml"> Items in general wardrobe </h:link>
+                                    outcome="/item/item_list.xhtml"> #{messages['nav.items']} </h:link>
                         </li>
-                        <h:panelGroup rendered="#{facesContext.externalContext.isUserInRole('admin')}">
-                            <li class="nav-item">
-                                <h:link styleClass="nav-link"
-                                        outcome="/user/user_list.xhtml">Users</h:link>
-                            </li>
-                        </h:panelGroup>
-
                     </ul>
                 </div>
             </nav>
@@ -63,7 +57,7 @@
 
             <footer class="text-center text-lg-start bg-light text-muted p-2">
                 <div class="text-center">
-                    Julia Chomicka, app created for university project
+                    #{messages['copyright.developedBy']}
                 </div>
             </footer>
         </div>

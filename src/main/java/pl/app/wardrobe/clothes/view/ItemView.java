@@ -44,7 +44,7 @@ public class ItemView implements Serializable{
     }
 
     public void init() throws IOException {
-        Optional<Item> item = itemService.findItemById(id);
+        Optional<Item> item = itemService.findItemByIdForCallerPrincipal(id);
         if (item.isPresent()) {
             this.item = factory.itemToModel().apply(item.get());
         } else {

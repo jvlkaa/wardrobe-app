@@ -11,15 +11,15 @@
 
     <ui:define name="content">
         <article>
-            <header><h2> Add clothing to wardrobe </h2></header>
+            <header><h2> #{messages['addTitle']} </h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                        <h:commandButton styleClass="btn" value="#{messages['formPrevious']}" immediate="true"
                                          action="#{itemCreate.goToBasicAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn" value="Next" disabled="true"/>
+                        <h:button styleClass="btn" value="#{messages['formNext']}" disabled="true"/>
                     </div>
                 </div>
 
@@ -28,7 +28,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Category
+                                #{messages['formClothes']}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{itemCreate.item.clothesCategory.name}"/>
@@ -37,7 +37,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Size
+                                #{messages['formSize']}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{itemCreate.item.size}"/>
@@ -46,7 +46,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Color
+                                #{messages['formColor']}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{itemCreate.item.color}"/>
@@ -55,7 +55,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Purchase date
+                                #{messages['formDate']}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{itemCreate.item.purchaseDate}"/>
@@ -66,11 +66,11 @@
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-primary" value="Create"
+                        <h:commandButton styleClass="btn btn-primary" value="#{messages['formCreate']}"
                                          action="#{itemCreate.saveAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages['formCancel']}"
                                          action="#{itemCreate.cancelAction()}"/>
                     </div>
                 </div>

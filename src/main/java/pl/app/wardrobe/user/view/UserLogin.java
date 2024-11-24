@@ -15,7 +15,7 @@ import lombok.extern.java.Log;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.security.enterprise.SecurityContext;
-
+import pl.app.wardrobe.view.producer.qualifier.FacesElement;
 import static jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
 
 @RequestScoped
@@ -24,16 +24,18 @@ import static jakarta.security.enterprise.authentication.mechanism.http.Authenti
 public class UserLogin {
 
     private final HttpServletRequest request;
+    private final HttpServletResponse response;
     private final SecurityContext securityContext;
     private final FacesContext facesContext;
 
     @Inject
     public UserLogin(
-            HttpServletRequest request,
+            HttpServletRequest request,  @FacesElement HttpServletResponse response,
             @SuppressWarnings("CdiInjectionPointsInspection") SecurityContext securityContext,
             FacesContext facesContext
     ) {
         this.request = request;
+        this.response = response;
         this.securityContext = securityContext;
         this.facesContext = facesContext;
     }
@@ -49,13 +51,9 @@ public class UserLogin {
     @SneakyThrows
     public void loginAction() {
         Credential credential = new UsernamePasswordCredential(login, new Password(password));
-        AuthenticationStatus status = securityContext.authenticate(request, extractResponseFromFacesContext(),
-                withParams().credential(credential));
+        AuthenticationStatus status = securityContext.authenticate(request, response, withParams().credential(credential));
         facesContext.responseComplete();
     }
 
-    private HttpServletResponse extractResponseFromFacesContext() {
-        return (HttpServletResponse) facesContext.getExternalContext().getResponse();
-    }
 }
 

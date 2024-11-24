@@ -15,6 +15,7 @@ import pl.app.wardrobe.clothes.entity.Clothes;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
+import pl.app.wardrobe.notify.interceptor.binding.Notify;
 import pl.app.wardrobe.user.entity.Role;
 import pl.app.wardrobe.user.entity.User;
 import pl.app.wardrobe.user.repository.api.UserRepository;
@@ -54,6 +55,7 @@ public class ItemService {
                 .ifPresent(clothes -> clothes.getItems().add(item));
     }
 
+    @Notify
     public void createForCallerPrincipal(Item item) {
         if (securityContext.isCallerInRole(Role.ADMIN)) {
             create(item);
@@ -132,6 +134,7 @@ public class ItemService {
         itemRepository.update(item);
     }
 
+    @Notify
     public void updateForCallerPrincipal(Item item) {
         if (securityContext.isCallerInRole(Role.ADMIN)) {
             update(item);
@@ -153,6 +156,7 @@ public class ItemService {
         itemRepository.delete(itemRepository.find(id).orElseThrow());
     }
 
+    @Notify
     public void deleteForCallerPrincipal(UUID id){
         if (securityContext.isCallerInRole(Role.ADMIN)) {
             delete(id);
@@ -167,4 +171,5 @@ public class ItemService {
             });
         }
     }
+
 }

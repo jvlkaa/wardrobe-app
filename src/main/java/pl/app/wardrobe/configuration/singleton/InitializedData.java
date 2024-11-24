@@ -72,8 +72,8 @@ public class InitializedData {
 
             User user1 = User.builder()
                     .id(UUID.fromString("8707cd01-ad10-4c87-ba0d-09b789f51ef8"))
-                    .login("johnSmith")
-                    .password("john123")
+                    .login("julia")
+                    .password("julia")
                     .dateOfBirth(LocalDate.of(2002, 5, 20))
                     .email("john@example.com")
                     .roles(List.of(Role.USER))

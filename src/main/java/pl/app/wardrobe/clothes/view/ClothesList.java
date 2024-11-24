@@ -44,14 +44,14 @@ public class ClothesList {
         return clothes_list;
     }
 
-    public String deleteAction(ClothesListModel.Clothes clothes) {
+    public void  deleteAction(ClothesListModel.Clothes clothes) {
         clothesService.findClothesById(clothes.getId()).ifPresentOrElse(
                 entity -> {
                     List<Item> items = itemService.findItemsByClothes(clothes.getId());
                     if (items.isEmpty()) {
                         throw new NotFoundException();
                     }
-                    items.forEach(item -> itemService.delete(item.getId()));
+                    items.forEach(item -> itemService.deleteForCallerPrincipal(item.getId()));
 
                     clothesService.delete(clothes.getId());
                 },
@@ -60,6 +60,6 @@ public class ClothesList {
                 }
         );
 
-        return "clothes_list?faces-redirect=true";
+        clothes_list = null;
     }
 }

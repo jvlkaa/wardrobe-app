@@ -37,9 +37,9 @@ public class ItemList {
         return item_list;
     }
 
-    public String deleteAction(ItemListModel.Item item) {
-        itemService.delete(item.getId());
-        return "item_list?faces-redirect=true";
+    public void  deleteAction(ItemListModel.Item item) {
+        itemService.deleteForCallerPrincipal(item.getId());
+        item_list = null;
     }
 
 }

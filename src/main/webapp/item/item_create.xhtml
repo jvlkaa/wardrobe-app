@@ -11,14 +11,14 @@
 
     <ui:define name="content">
         <article>
-            <header><h2> Add your clothing to wardrobe </h2></header>
+            <header><h2> #{messages['addTitle']} </h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn" value="Previous" disabled="true"/>
+                        <h:button styleClass="btn" value="#{messages['formPrevious']}" disabled="true"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Next"
+                        <h:commandButton styleClass="btn" value="#{messages['formNext']}"
                                          action="#{itemCreate.goToConfirmAction()}"/>
                     </div>
                 </div>
@@ -27,21 +27,21 @@
                     <div class="col-4 p-2">
                         <div class="form-outline">
                             <h:inputText id="name" value="#{itemCreate.item.name}" styleClass="form-control"/>
-                            <h:outputLabel for="name" value="Name:" styleClass="form-label"/>
+                            <h:outputLabel for="name" value="#{messages['formName']}" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-4 p-2">
                     <fieldset>
-                        <legend class="form-label fs-6">Size:</legend>
+                        <legend class="form-label fs-6">#{messages['formSize']}</legend>
                         <ui:repeat value="#{itemCreate.availableSizes}" var="size">
                             <div class="form-check">
                                 <h:selectOneRadio id="sizeRadio" group="sizeGroup"
                                                   value="#{itemCreate.item.size}"
                                                   styleClass="form-check-input"
                                                   enabledClass="form-check-label"
-                                                  required="true" requiredMessage="Please select size">
+                                                  required="true" requiredMessage="#{messages['formWarning']}">
                                     <f:selectItem itemValue="#{size}" itemLabel="#{size}" />
                                 </h:selectOneRadio>
                             </div>
@@ -54,8 +54,8 @@
                         <div class="form-outline">
                             <h:inputTextarea id="color" value="#{itemCreate.item.color}"
                                              styleClass="form-control" rows="4"
-                                             required="true" requiredMessage="Please select color"/>
-                            <h:outputLabel for="color" value="Color:" styleClass="form-label"/>
+                                             required="true" requiredMessage="#{messages['formWarning']}"/>
+                            <h:outputLabel for="color" value="#{messages['formColor']}" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -65,22 +65,22 @@
                         <div class="form-outline">
                             <h:inputText id="purchase-date" value="#{itemCreate.item.purchaseDate}"
                                          type="date" styleClass="form-control"
-                                         required="true" requiredMessage="Please select purchase date"/>
-                            <h:outputLabel for="purchase-date" value="Purchase date:" styleClass="form-label"/>
+                                         required="true" requiredMessage="#{messages['formWarning']}"/>
+                            <h:outputLabel for="purchase-date" value="#{messages['formDate']}" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-4 p-2">
                     <fieldset>
-                        <legend class="form-label fs-6">Clothes category:</legend>
+                        <legend class="form-label fs-6">#{messages['formClothes']}</legend>
                         <ui:repeat value="#{itemCreate.clothes_list}" var="clothesCategory">
                             <div class="form-check">
                                 <h:selectOneRadio id="radioId" group="clothesCategory"
                                                   value="#{itemCreate.item.clothesCategory}"
                                                   styleClass="form-check-input"
                                                   enabledClass="form-check-label"
-                                                  required="true" requiredMessage="Please select clothes category">
+                                                  required="true" requiredMessage="#{messages['formWarning']}">
                                     <f:selectItem itemValue="#{clothesCategory}" itemLabel="#{clothesCategory.name}"/>
                                 </h:selectOneRadio>
                             </div>
@@ -90,7 +90,7 @@
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
+                        <h:button styleClass="btn btn-primary" value="#{messages['formCreate']}" disabled="true"/>
                     </div>
                 </div>
             </h:form>

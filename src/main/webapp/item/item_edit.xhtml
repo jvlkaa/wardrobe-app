@@ -12,13 +12,13 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Edit item info</h2></header>
+            <header><h2>#{messages['editTitle']}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
                             <h:inputText id="name" value="#{itemEdit.item.name}" styleClass="form-control"/>
-                            <h:outputLabel for="name" value="Name:" styleClass="form-label"/>
+                            <h:outputLabel for="name" value="#{messages['formName']}" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -26,11 +26,11 @@
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-primary" value="Update"
+                        <h:commandButton styleClass="btn btn-primary" value="#{messages['formUpdate']}"
                                          action="#{itemEdit.saveAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>
+                        <h:commandButton styleClass="btn btn-secondary" type="reset" value="#{messages['formReset']}"/>
                     </div>
                 </div>
             </h:form>

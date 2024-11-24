@@ -8,41 +8,43 @@
     <ui:define name="content">
 
         <article class="text--justified">
-            <header><h2> Items: </h2></header>
+            <header><h2> #{messages['itemTitle']} </h2></header>
 
-            <h:dataTable value="#{itemList.item_list.itemList}" var="item"
+            <h:dataTable id="itemTable" value="#{itemList.item_list.itemList}" var="item"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
 
                 <h:column>
-                    <f:facet name="header">Name</f:facet>
+                    <f:facet name="header"> #{messages['formName']}</f:facet>
                     <h:outputText value="#{item.name}"/>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">See details</f:facet>
+                    <f:facet name="header"> #{messages['toView']}</f:facet>
                     <h:link outcome="/item/item_view.xhtml" value="View">
                         <f:param name="id" value="#{item.id}"/>
                     </h:link>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Edit</f:facet>
+                    <f:facet name="header">#{messages['toEdit']}</f:facet>
                     <h:link outcome="/item/item_edit.xhtml" value="Edit">
                         <f:param name="id" value="#{item.id}"/>
                     </h:link>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Delete</f:facet>
+                    <f:facet name="header">#{messages['toDelete']}</f:facet>
                     <h:form>
                         <h:commandButton styleClass="btn" value="Delete"
-                                         action="#{itemList.deleteAction(item)}"/>
+                                         actionListener="#{itemList.deleteAction(item)}">
+                            <f:ajax execute="@this" render=":itemTable"/>
+                        </h:commandButton>
                     </h:form>
                 </h:column>
 
                 <f:facet name="footer">
                     <h:button styleClass="btn" outcome="/item/item_create.xhtml"
-                              value="Create new clothing" style="background-color: #ffa6d6;"/>
+                              value="#{messages['createItem']}" style="background-color: #ffa6d6;"/>
                 </f:facet>
             </h:dataTable>
         </article>
