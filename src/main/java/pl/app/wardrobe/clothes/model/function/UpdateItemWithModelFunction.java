@@ -20,6 +20,7 @@ public class UpdateItemWithModelFunction implements BiFunction<Item, ItemEditMod
                 .owner(User.builder()
                         .id(request.getOwner().getId())
                         .build())
+                .creationDateTime(entity.getCreationDateTime())
                 .build();
     }
 }

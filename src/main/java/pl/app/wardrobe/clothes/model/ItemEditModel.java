@@ -2,6 +2,8 @@ package pl.app.wardrobe.clothes.model;
 import lombok.*;
 import pl.app.wardrobe.user.model.UserModel;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -12,4 +14,6 @@ import pl.app.wardrobe.user.model.UserModel;
 public class ItemEditModel {
     private String name;
     private UserModel owner;
+    private LocalDateTime lastModifiedDateTime;
+    private LocalDateTime creationDateTime;
 }

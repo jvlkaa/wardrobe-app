@@ -42,6 +42,20 @@
                     </h:form>
                 </h:column>
 
+                <h:column>
+                    <f:facet name="header">#{messages['created']}</f:facet>
+                    <h:outputText value="#{item.creationDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{messages['modified']}</f:facet>
+                    <h:outputText value="#{item.lastModifiedDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                    </h:outputText>
+                </h:column>
+
                 <f:facet name="footer">
                     <h:button styleClass="btn" outcome="/item/item_create.xhtml"
                               value="#{messages['createItem']}" style="background-color: #ffa6d6;"/>
