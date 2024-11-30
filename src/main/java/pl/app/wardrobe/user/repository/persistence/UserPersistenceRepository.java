@@ -4,7 +4,11 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import pl.app.wardrobe.user.entity.User;
+import pl.app.wardrobe.user.entity.User_;
 import pl.app.wardrobe.user.repository.api.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +32,11 @@ public class UserPersistenceRepository implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return manager.createQuery("select u from User u", User.class).getResultList();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        query.select(root);
+        return manager.createQuery(query).getResultList();
     }
 
     @Override
@@ -39,9 +47,14 @@ public class UserPersistenceRepository implements UserRepository {
     @Override
     public Optional<User> findByLogin(String login) {
         try {
-            return Optional.of(manager.createQuery("select u from User u where u.login = :login", User.class)
-                    .setParameter("login", login)
-                    .getSingleResult());
+            CriteriaBuilder cb = manager.getCriteriaBuilder();
+            CriteriaQuery<User> query = cb.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+            query.select(root)
+                    .where(cb.and(
+                            cb.equal(root.get(User_.login), login)
+                    ));
+            return Optional.of(manager.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -50,9 +63,14 @@ public class UserPersistenceRepository implements UserRepository {
     @Override
     public Optional<User> findByEmail(String email) {
         try {
-            return Optional.of(manager.createQuery("select u from User u where u.email = :email", User.class)
-                    .setParameter("email", email)
-                    .getSingleResult());
+            CriteriaBuilder cb = manager.getCriteriaBuilder();
+            CriteriaQuery<User> query = cb.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+            query.select(root)
+                    .where(cb.and(
+                            cb.equal(root.get(User_.email), email)
+                    ));
+            return Optional.of(manager.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }

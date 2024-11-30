@@ -3,7 +3,11 @@ package pl.app.wardrobe.clothes.repository.persistence;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import pl.app.wardrobe.clothes.entity.Item;
+import pl.app.wardrobe.clothes.entity.Item_;
 import pl.app.wardrobe.clothes.repository.api.ItemRepository;
 import jakarta.persistence.NoResultException;
 import pl.app.wardrobe.user.entity.User;
@@ -30,7 +34,11 @@ public class ItemPersistenceRepository implements ItemRepository {
 
     @Override
     public List<Item> findAll() {
-        return manager.createQuery("select i from Item i", Item.class).getResultList();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<Item> query = cb.createQuery(Item.class);
+        Root<Item> root = query.from(Item.class);
+        query.select(root);
+        return manager.createQuery(query).getResultList();
     }
 
     @Override
@@ -45,18 +53,26 @@ public class ItemPersistenceRepository implements ItemRepository {
 
     @Override
     public List<Item> findByOwner(User owner) {
-        return manager.createQuery("select i from Item i where i.owner = :owner", Item.class)
-                .setParameter("owner", owner)
-                .getResultList();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<Item> query = cb.createQuery(Item.class);
+        Root<Item> root = query.from(Item.class);
+        query.select(root)
+                .where(cb.equal(root.get(Item_.owner), owner));
+        return manager.createQuery(query).getResultList();
     }
 
     @Override
     public Optional<Item> findByIdFromUser(User user, UUID id) {
         try {
-            return Optional.of(manager.createQuery("select c from Item c where c.id = :id and c.owner = :user", Item.class)
-                    .setParameter("user", user)
-                    .setParameter("id", id)
-                    .getSingleResult());
+            CriteriaBuilder cb = manager.getCriteriaBuilder();
+            CriteriaQuery<Item> query = cb.createQuery(Item.class);
+            Root<Item> root = query.from(Item.class);
+            query.select(root)
+                    .where(cb.and(
+                            cb.equal(root.get(Item_.owner), user),
+                            cb.equal(root.get(Item_.id), id)
+                    ));
+            return Optional.of(manager.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -65,10 +81,15 @@ public class ItemPersistenceRepository implements ItemRepository {
 
     @Override
     public List<Item> findByCategoryAndUser(User owner, Clothes clothesCategory) {
-        return manager.createQuery("select i from Item i where i.owner = :owner and i.clothesCategory = :clothesCategory", Item.class)
-                .setParameter("owner", owner)
-                .setParameter("clothesCategory", clothesCategory)
-                .getResultList();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<Item> query = cb.createQuery(Item.class);
+        Root<Item> root = query.from(Item.class);
+        query.select(root)
+                .where(cb.and(
+                        cb.equal(root.get(Item_.owner), owner),
+                        cb.equal(root.get(Item_.clothesCategory), clothesCategory)
+                ));
+        return manager.createQuery(query).getResultList();
     }
 
     @Override

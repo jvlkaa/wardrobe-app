@@ -1,7 +1,11 @@
 package pl.app.wardrobe.clothes.repository.persistence;
 
 import jakarta.enterprise.context.Dependent;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import pl.app.wardrobe.clothes.entity.Clothes;
+import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.repository.api.ClothesRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,7 +30,11 @@ public class ClothesPersistenceRepository implements ClothesRepository {
 
     @Override
     public List<Clothes> findAll() {
-        return manager.createQuery("select c from Clothes c", Clothes.class).getResultList();
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<Clothes> query = cb.createQuery(Clothes.class);
+        Root<Clothes> root = query.from(Clothes.class);
+        query.select(root);
+        return manager.createQuery(query).getResultList();
     }
 
     @Override
