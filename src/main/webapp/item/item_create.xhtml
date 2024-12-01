@@ -26,8 +26,11 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputText id="name" value="#{itemCreate.item.name}" styleClass="form-control"/>
+                            <h:inputText id="name" value="#{itemCreate.item.name}" required="true"
+                                         binding="#{nameInput}"
+                                         styleClass="#{nameInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
                             <h:outputLabel for="name" value="#{messages['formName']}" styleClass="form-label"/>
+                            <h:message for="name" styleClass="invalid-feedback"/>
                         </div>
                     </div>
                 </div>
@@ -52,10 +55,13 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputTextarea id="color" value="#{itemCreate.item.color}"
-                                             styleClass="form-control" rows="4"
-                                             required="true" requiredMessage="#{messages['formWarning']}"/>
+                            <h:inputTextarea id="color" value="#{itemCreate.item.color}" rows="4"
+                                             binding="#{colorInput}"
+                                             required="true"
+                                             styleClass="#{colorInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
+
                             <h:outputLabel for="color" value="#{messages['formColor']}" styleClass="form-label"/>
+                            <h:message for="color" styleClass="invalid-feedback"/>
                         </div>
                     </div>
                 </div>
@@ -64,9 +70,12 @@
                     <div class="col-4 p-2">
                         <div class="form-outline">
                             <h:inputText id="purchase-date" value="#{itemCreate.item.purchaseDate}"
-                                         type="date" styleClass="form-control"
-                                         required="true" requiredMessage="#{messages['formWarning']}"/>
+                                         type="date"
+                                         binding="#{purchaseDateInput}"
+                                         required="true"
+                                         styleClass="#{purchaseDateInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
                             <h:outputLabel for="purchase-date" value="#{messages['formDate']}" styleClass="form-label"/>
+                            <h:message for="purchase-date" styleClass="invalid-feedback"/>
                         </div>
                     </div>
                 </div>
