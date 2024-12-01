@@ -69,11 +69,14 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <h:inputText id="purchase-date" value="#{itemCreate.item.purchaseDate}"
+                            <h:inputText id="purchase-date" value="#{itemCreateModel.purchaseDate}"
                                          type="date"
                                          binding="#{purchaseDateInput}"
                                          required="true"
-                                         styleClass="#{purchaseDateInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
+                                         styleClass="#{purchaseDateInput.valid ? 'form-control' : 'is-invalid form-control'}">
+                            <f:validateBean
+                                        validationGroups="pl.app.wardrobe.clothes.validation.group.ItemModelGroup, jakarta.validation.groups.Default"/>
+                            </h:inputText>
                             <h:outputLabel for="purchase-date" value="#{messages['formDate']}" styleClass="form-label"/>
                             <h:message for="purchase-date" styleClass="invalid-feedback"/>
                         </div>
@@ -98,10 +101,19 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-4 p-2">
+                        <h:message styleClass="text-danger" for="item"/>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-2 p-2 text-center">
                         <h:button styleClass="btn btn-primary" value="#{messages['formCreate']}" disabled="true"/>
                     </div>
                 </div>
+
+                <f:validateWholeBean id="item" value="#{itemCreate.item}" validationGroups="pl.app.wardrobe.clothes.validation.group.ItemModelGroup" />
+
             </h:form>
         </article>
     </ui:define>

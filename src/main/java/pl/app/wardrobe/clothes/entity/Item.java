@@ -3,7 +3,6 @@ package pl.app.wardrobe.clothes.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.app.wardrobe.VersionAndCreationDateAuditable;
 import pl.app.wardrobe.user.entity.User;
 
 import java.io.Serializable;

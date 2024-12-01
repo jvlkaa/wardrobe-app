@@ -1,4 +1,4 @@
-package pl.app.wardrobe;
+package pl.app.wardrobe.clothes.entity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

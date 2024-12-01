@@ -33,7 +33,7 @@ public class ItemCreate implements Serializable {
     private final ModelFunctionFactory factory;
 
     @Getter
-    private ItemCreateModel item;
+    private final ItemCreateModel item;
     @Getter
     private List<ClothesShortModel> clothes_list;
 
@@ -42,9 +42,11 @@ public class ItemCreate implements Serializable {
     @Inject
     public ItemCreate(
             ModelFunctionFactory factory,
+            ItemCreateModel item,
             Conversation conversation
     ) {
         this.factory = factory;
+        this.item = item;
         this.conversation = conversation;
     }
 
@@ -59,14 +61,12 @@ public class ItemCreate implements Serializable {
     }
 
 
-    public void init() {
+    public void init()throws Exception {
         if (conversation.isTransient()) {
             clothes_list = clothesService.findClothesList().stream()
                     .map(factory.clothesShortToModel())
                     .collect(Collectors.toList());
-            item = ItemCreateModel.builder()
-                    .id(UUID.randomUUID())
-                    .build();
+            item.setId(UUID.randomUUID());
             conversation.begin();
         }
     }
