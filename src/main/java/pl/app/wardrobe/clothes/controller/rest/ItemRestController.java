@@ -15,7 +15,7 @@ import pl.app.wardrobe.clothes.dto.GetItemListResponse;
 import pl.app.wardrobe.clothes.dto.GetItemResponse;
 import pl.app.wardrobe.clothes.dto.PatchItemRequest;
 import pl.app.wardrobe.clothes.dto.PutItemRequest;
-import pl.app.wardrobe.clothes.entity.Clothes;
+import jakarta.persistence.OptimisticLockException;
 import pl.app.wardrobe.clothes.entity.Item;
 import pl.app.wardrobe.clothes.service.ClothesService;
 import pl.app.wardrobe.clothes.service.ItemService;
@@ -118,20 +118,28 @@ public class ItemRestController implements ItemController {
 
     @Override
     public void patchItem(UUID id, PatchItemRequest request) {
-        itemService.findItemById(id).ifPresentOrElse(
-                entity -> {
-                    try {
-                        itemService.updateForCallerPrincipal(factory.updateItemWithRequest().apply(entity, request));
-                    } catch (EJBAccessException ex) {
-                        log.log(Level.WARNING, ex.getMessage(), ex);
-                        throw new ForbiddenException(ex.getMessage());
-                    }
+        try {
+            itemService.findItemById(id).ifPresentOrElse(
+                    entity -> {
+                        try {
+                            itemService.updateForCallerPrincipal(factory.updateItemWithRequest().apply(entity, request));
+                        } catch (EJBAccessException ex) {
+                            log.log(Level.WARNING, ex.getMessage(), ex);
+                            throw new ForbiddenException(ex.getMessage());
+                        }
 
-                },
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+                    },
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        }
+        catch (EJBException ex) {
+            if (ex.getCause() instanceof OptimisticLockException)
+            {
+                throw new BadRequestException(ex.getCause());
+            }
+        }
     }
 
     @Override

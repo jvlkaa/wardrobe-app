@@ -19,6 +19,7 @@ public class ItemToEditModelFunction implements Function<Item, ItemEditModel>, S
                 .owner(userToModelFunction.apply(entity.getOwner()))
                 .lastModifiedDateTime(entity.getLastModifiedDateTime())
                 .creationDateTime(entity.getCreationDateTime())
+                .version(entity.getVersion())
                 .build();
     }
 }

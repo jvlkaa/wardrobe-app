@@ -14,6 +14,7 @@ public class ItemListToModelFunction implements Function<List<Item>, ItemListMod
                     .name(item.getName())
                     .lastModifiedDateTime(item.getLastModifiedDateTime())
                     .creationDateTime(item.getCreationDateTime())
+                    .version(item.getVersion())
                     .build())
                 .toList())
             .build();

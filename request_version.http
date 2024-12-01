@@ -1,0 +1,17 @@
+# get single item (motorcycle jacket )
+// @no-cookie-jar
+GET http://localhost:9080/wardrobe-app/main/clothes/4d7f9b4a-584a-4d9a-8f10-3b8b2b6d3b92/items/f5d79444-9b0a-4bde-b6a8-6355075d4c6a
+Authorization: Basic YWRtaW46cm9vdA==
+###
+
+# update user item
+// @no-cookie-jar
+PATCH  http://localhost:9080/wardrobe-app/main/clothes/b12c7a56-1e45-4b3f-a5a2-8e8735f543d1/items/1b56d72e-c60f-4e6c-b74a-bd9b531b4be1
+Authorization: Basic YWRtaW46cm9vdA==
+Content-Type: application/json
+
+{
+  "name": "low waisted jeans",
+  "version": 1
+}
+###

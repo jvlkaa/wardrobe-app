@@ -26,6 +26,7 @@ public class ItemListModel {
         private String name;
         private LocalDateTime lastModifiedDateTime;
         private LocalDateTime creationDateTime;
+        private Long version;
     }
 
     @Singular("itemList")

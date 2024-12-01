@@ -16,6 +16,7 @@ public class ItemToResponseFunction implements Function<Item, GetItemResponse> {
                         .id(entity.getClothesCategory().getId())
                         .name(entity.getClothesCategory().getName())
                         .build())
+                .version(entity.getVersion())
                 .build();
     }
 }

@@ -17,6 +17,7 @@ public class UpdateItemWithRequestFunction implements BiFunction<Item, PatchItem
                 .clothesCategory(entity.getClothesCategory())
                 .owner(entity.getOwner())
                 .creationDateTime(entity.getCreationDateTime())
+                .version(request.getVersion())
                 .build();
     }
 }

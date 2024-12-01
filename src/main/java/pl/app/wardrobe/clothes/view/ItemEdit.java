@@ -1,11 +1,15 @@
 package pl.app.wardrobe.clothes.view;
 
 import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.TransactionalException;
 import lombok.Getter;
 import lombok.Setter;
 import pl.app.wardrobe.clothes.entity.Item;
@@ -56,9 +60,20 @@ public class ItemEdit implements Serializable {
         }
     }
 
-    public String saveAction() {
-        itemService.updateForCallerPrincipal(factory.updateItem().apply(itemService.findItemById(id).orElseThrow(), item));
-        return "/item/item_list.xhtml?faces-redirect=true&includeViewParams=true";
+    public String saveAction() throws IOException {
+        try {
+            itemService.updateForCallerPrincipal(factory.updateItem().apply(itemService.findItemById(id).orElseThrow(), item));
+            String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+            return viewId + "?faces-redirect=true&includeViewParams=true";
+
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof OptimisticLockException) {
+                init();
+                facesContext.addMessage(null, new FacesMessage("Version collision."));
+            }
+            return null ;
+        }
     }
+
 
 }

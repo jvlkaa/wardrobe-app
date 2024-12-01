@@ -16,4 +16,5 @@ public class ItemEditModel {
     private UserModel owner;
     private LocalDateTime lastModifiedDateTime;
     private LocalDateTime creationDateTime;
+    private Long version;
 }

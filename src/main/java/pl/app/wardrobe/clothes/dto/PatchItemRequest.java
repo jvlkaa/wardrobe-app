@@ -11,4 +11,5 @@ import lombok.*;
 @EqualsAndHashCode
 public class PatchItemRequest {
     private String name;
+    private Long version;
 }

@@ -43,6 +43,11 @@
                 </h:column>
 
                 <h:column>
+                    <f:facet name="header">#{messages['version_item']}</f:facet>
+                    <h:outputText value="#{item.version}"/>
+                </h:column>
+
+                <h:column>
                     <f:facet name="header">#{messages['created']}</f:facet>
                     <h:outputText value="#{item.creationDateTime}">
                         <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>

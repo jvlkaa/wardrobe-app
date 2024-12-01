@@ -33,4 +33,5 @@ public class GetItemResponse {
     private String color;
     private LocalDate purchaseDate;
     private Clothes clothesCategory;
+    private Long version;
 }
